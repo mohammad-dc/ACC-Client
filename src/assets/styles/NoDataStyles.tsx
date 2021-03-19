@@ -4,7 +4,8 @@ import * as Color from "../../constants/colors";
 export const useStyles = makeStyles((theme: Theme) => 
     createStyles({
         root: {
-            height: '100vh',
+            minHeight: '400px',
+            height: '100%',
             backgroundColor: Color.wightColor,
             position: 'relative',
         },

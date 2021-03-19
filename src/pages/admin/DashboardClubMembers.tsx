@@ -9,7 +9,7 @@ import ClubMemberEditDialog from "../../components/Dialogs/admin/ClubMember/Club
 import ClubMemberDeleteDialog from "../../components/Dialogs/admin/ClubMember/ClubMemberDeleteDialog";
 import {clubMembersContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
-import {useStyles} from "../../assets/styles/admin/ClubMembersStyles";
+import {useStyles} from "../../assets/styles/admin/pagesStanderdStyle";
 
 const DashboardClubMembers = observer(() => {
     const classes = useStyles();

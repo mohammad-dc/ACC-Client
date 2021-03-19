@@ -42,8 +42,8 @@ const SideBar: React.FC = ({children}) => {
                 
                  <List>
           {sidebar_items.map((text, index) => (
-            <NavLink to={`/admin/dashboard/${sidebar_links[index]}`} className={classes.NavLink}>
-              <ListItem button key={text} className={classes.listItems}>
+            <NavLink key={text} to={`/admin/dashboard/${sidebar_links[index]}`} className={classes.NavLink}>
+              <ListItem button className={classes.listItems}>
                 <ListItemIcon style={{ width: open? 'fit-content':'100%'}}>{icons[index]}</ListItemIcon>
                 <ListItemText className={classes.listItemText}><Typography variant="h6">{text}</Typography> </ListItemText>
               </ListItem>
