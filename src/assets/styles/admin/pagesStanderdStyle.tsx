@@ -5,9 +5,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             padding: '10px 20px',
-            backgroundColor: Color.wightColor,
             position: 'relative',
-            height: '100vh'
         },
         BoxFlex: {
            display: 'flex',

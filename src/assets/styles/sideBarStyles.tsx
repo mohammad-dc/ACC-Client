@@ -7,6 +7,10 @@ export const useStyles = makeStyles((theme: Theme) =>
     root: {
       display: 'flex',
     },
+    palette: {
+      background:  "#fff"
+      
+    },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
       transition: theme.transitions.create(['width', 'margin'], {
