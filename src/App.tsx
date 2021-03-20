@@ -10,6 +10,7 @@ import DashboardCuorses from "./pages/admin/DashboardCuorses";
 import DashboardEducationalStaff from "./pages/admin/DashboardEducationalStaff";
 import DashboardOutstandingStudents from "./pages/admin/DashboardOutstandingStudents";
 import DashboardStudentsHelpClub from "./pages/admin/DashboardStudentsHelpClub";
+import Login from "./pages/admin/login";
 import NotFound from "./pages/NotFound";
 // Configure JSS
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
@@ -26,6 +27,7 @@ const App = () =>{
             <Route exact path="/admin/dashboard/news" component={DashboardNews} />
             <Route exact path="/admin/dashboard/outstanding_students" component={DashboardOutstandingStudents} />
             <Route exact path="/admin/dashboard/students_helper" component={DashboardStudentsHelpClub} />
+            <Route exact path="/admin/auth/login" component={Login}/>
             <Route exact path="*" component={NotFound} />
           </Switch>
         </Router>
