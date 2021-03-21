@@ -2,7 +2,7 @@ import React from 'react'
 import {Box, Avatar, Typography, IconButton, Tooltip} from "@material-ui/core";
 import {MdDeleteForever} from "react-icons/md";
 import {RiEdit2Fill} from "react-icons/ri";
-import {IClubMember} from "../../interfaces/admin/clubMember";
+import {IClubMember} from "../../interfaces/clubMember";
 import {clubMembersContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 import {useStyles} from "../../assets/styles/admin/ClubMemberItemStyles";

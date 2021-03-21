@@ -7,7 +7,7 @@ import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import CustomField from "../../../CustomeField";
 import {ClubMemberSchema} from "../../../../validations/clubMembers";
 import {clubMembersContext} from "../../../../store/store";
-import {IClubMember} from "../../../../interfaces/admin/clubMember";
+import {IClubMember} from "../../../../interfaces/clubMember";
 import {observer} from "mobx-react-lite";
 
 const ClubMemberEditDialog: React.FC = observer(() => {
