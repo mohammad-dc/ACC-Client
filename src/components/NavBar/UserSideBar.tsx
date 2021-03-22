@@ -11,18 +11,25 @@ import {FaUserShield} from "react-icons/fa";
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+
 import {theme} from "../../constants/theme";
 import Logo from "../../assets/images/accLogo.png";
 import clsx from 'clsx';
+import {themeContext} from "../../store/store";
+import {observer} from "mobx-react-lite";
 import { useStyles } from "../../assets/styles/NavBar";
 
-const NavBar: React.FC = ({children}) => {
-    const [lightTheme, setLightTheme] = React.useState<boolean>(true);
+const NavBar: React.FC = observer(({children}) => {
+
+    const appTheme = React.useContext(themeContext);
+
     const classes = useStyles();
     let sidebar_items: string[] = ['الرئيسية', 'من نحن', 'المواد', 'الطاقم التعليمي', 'الطلاب المتفوقين', 'الطلاب المساعدين'];
     let sidebar_links: string[] = ['home', 'about', 'courses', 'educational_staff', 'outstanding_students', 'students_helper'];
     let icons = [<FaHome className={classes.SideBarIcons} />, <BsFillInfoCircleFill className={classes.SideBarIcons} />, <ImBooks className={classes.SideBarIcons} />, <ImUserTie className={classes.SideBarIcons} />, <FaUserCheck className={classes.SideBarIcons} />, <FaUserShield className={classes.SideBarIcons} />]
     const [open, setOpen] = React.useState(false);
+
+    console.log(appTheme.isLightTheme);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -31,11 +38,6 @@ const NavBar: React.FC = ({children}) => {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-    
-    const changeTheme = () => {
-        setLightTheme(!lightTheme);
-        localStorage.setItem('theme', lightTheme? 'dark' : 'light');
-    }
 
     return (
         <div className={classes.root}>
@@ -96,7 +98,7 @@ const NavBar: React.FC = ({children}) => {
         <Grid component="label" container alignItems="center" spacing={1}>
           <Grid item style={{display: open? 'inline' : 'none'}}>Off</Grid>
           <Grid item style={{ margin: '0 auto'}}>
-            <Switch disableRipple name="theme" onChange={changeTheme} checked={lightTheme}/>
+            <Switch disableRipple name="theme" onChange={() => appTheme.changeTheme()} checked={appTheme.isLightTheme}/>
           </Grid>
           <Grid item style={{display: open? 'inline' : 'none'}}>On</Grid>
         </Grid>
@@ -108,6 +110,6 @@ const NavBar: React.FC = ({children}) => {
             </main>
                 </div>
     )
-}
+})
 
 export default NavBar

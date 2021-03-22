@@ -6,6 +6,7 @@ import {EducationalStaffStore} from "./educationalStaff";
 import {NewsStore} from "./news";
 import {OutstandingStudentStore} from "./outstandingStudent";
 import {StudentHelpClubStore} from "./studentHelpClub";
+import {ThemeStore} from "./theme";
 
 export const clubMembersContext = React.createContext(new ClubMemberStore());
 
@@ -18,3 +19,5 @@ export const newsContext = React.createContext(new NewsStore());
 export const outstandingStudentsContext = React.createContext(new OutstandingStudentStore());
 
 export const studentsHelpclubContext = React.createContext(new StudentHelpClubStore());
+
+export const themeContext = React.createContext(new ThemeStore());
