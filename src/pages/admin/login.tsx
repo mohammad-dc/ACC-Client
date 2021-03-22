@@ -1,5 +1,11 @@
-import React from 'react'
-import {Button, Typography} from "@material-ui/core";
+import React from 'react';
+import API from "../../api/utils/requests";
+import {useHistory} from "react-router-dom";
+import Cookies from "universal-cookie";
+import { observer } from "mobx-react-lite";
+import { adminContext } from "../../store/store";
+import {Button, Typography, Backdrop, CircularProgress, Snackbar} from "@material-ui/core";
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import {Formik, Form} from "formik";
 import CustomField from "../../components/CustomeField";
 import {AdminSchema} from "../../validations/admin";
@@ -12,8 +18,35 @@ let initialValues = {
     password: ''
 };
 
-const Login = () => {
+function Alert(props: AlertProps) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+const Login = observer(() => {
     const classes = useStyles();
+    const history = useHistory();
+    const cookies = new Cookies();
+    const admin = React.useContext(adminContext);
+
+    // stats
+    const [open, setOpen] = React.useState(false);
+    const [loading, setLoading] = React.useState(false);
+    const [message, setMessage] = React.useState('');
+    const [severity, setSeverity] = React.useState<'success' | 'error'>("success");
+
+    // functions
+    const handleCloseLoading = () => {
+        setLoading(false);
+    };
+  
+    const handleCloseAlert = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+  
+        setOpen(false);
+    };
+
     return (
         <ThemeProvider theme={theme}>
             <div className={classes.root}>
@@ -22,7 +55,35 @@ const Login = () => {
                 initialValues={initialValues}
                 validationSchema={AdminSchema}
                 onSubmit={async (values, {setSubmitting}) => {
-                    setSubmitting(true); 
+                    setSubmitting(true);
+                    setLoading(true);
+                    API.auth('admin/login', values)
+                        .then( res => {
+                                cookies.set(
+                                    'adminToken', res.data.token,
+                                    {
+                                        sameSite: 'strict',
+                                        path: '/admin/dashboard',
+                                        expires: new Date(new Date().getTime() + 36 * 10000),
+                                        domain : 'localhost',
+                                        httpOnly: false,
+                                        secure: false
+                                    }
+                                );
+                                setLoading(false);
+                                admin.isLogin = true;
+                                history.push('/admin/dashboard/members');
+                            }
+                        )
+                        .catch(error => {
+                            if(error.response.status === 404 || error.response.status === 401){
+                                setLoading(false);
+                                setOpen(true);
+                                setMessage(error.response.data.message);
+                                setSeverity('error');
+                            }
+                        });
+                    setSubmitting(false); 
                 }}
                 >
                     {({isSubmitting}) =>(
@@ -36,8 +97,20 @@ const Login = () => {
                     )}
                 </Formik>
             </div>
+
+            {/* for loading and alert*/}
+            <Backdrop className={classes.backdrop} open={loading} onClick={handleCloseLoading}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
+            
+            <Snackbar open={open} autoHideDuration={2000} onClose={handleCloseAlert}>
+                <Alert onClose={handleCloseAlert} severity={severity}>
+                    {message}
+                </Alert>
+            </Snackbar>
+
         </ThemeProvider>
     )
-}
+})
 
 export default Login

@@ -1,5 +1,6 @@
 import React from "react";
 
+import {AdminStore} from "./admin";
 import {ClubMemberStore} from "./clubMember";
 import {CourseStore} from "./course";
 import {EducationalStaffStore} from "./educationalStaff";
@@ -7,6 +8,8 @@ import {NewsStore} from "./news";
 import {OutstandingStudentStore} from "./outstandingStudent";
 import {StudentHelpClubStore} from "./studentHelpClub";
 import {ThemeStore} from "./theme";
+
+export const adminContext = React.createContext(new AdminStore());
 
 export const clubMembersContext = React.createContext(new ClubMemberStore());
 

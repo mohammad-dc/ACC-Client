@@ -7,6 +7,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         position: 'relative',
         padding: '10px',
         backgroundColor: '#eee',
+        bottom: '0'
     },
     headLine: {
         margin: '30px 0'

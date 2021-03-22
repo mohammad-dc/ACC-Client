@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route, Switch}  from "react-router-dom";
 import { create } from 'jss';
 import rtl from 'jss-rtl';
 import { StylesProvider, jssPreset } from '@material-ui/core/styles';
+import ProtectedRoute from "./routes/ProtectedRoute";
 import './App.css';
 // Admin pages
 import DashboardNews from "./pages/admin/DashboardNews";
@@ -31,12 +32,12 @@ const App = () =>{
       <div className="App">
         <Router>
           <Switch>
-            <Route exact path="/admin/dashboard/members" component={DashboardClubMembers} />
-            <Route exact path="/admin/dashboard/courses" component={DashboardCuorses} />
-            <Route exact path="/admin/dashboard/educational_staff" component={DashboardEducationalStaff} />
-            <Route exact path="/admin/dashboard/news" component={DashboardNews} />
-            <Route exact path="/admin/dashboard/outstanding_students" component={DashboardOutstandingStudents} />
-            <Route exact path="/admin/dashboard/students_helper" component={DashboardStudentsHelpClub} />
+            <ProtectedRoute exact path="/admin/dashboard/members" Component={DashboardClubMembers} />
+            <ProtectedRoute exact path="/admin/dashboard/courses" Component={DashboardCuorses} />
+            <ProtectedRoute exact path="/admin/dashboard/educational_staff" Component={DashboardEducationalStaff} />
+            <ProtectedRoute exact path="/admin/dashboard/news" Component={DashboardNews} />
+            <ProtectedRoute exact path="/admin/dashboard/outstanding_students" Component={DashboardOutstandingStudents} />
+            <ProtectedRoute exact path="/admin/dashboard/students_helper" Component={DashboardStudentsHelpClub} />
             <Route exact path="/admin/auth/login" component={Login}/>
             <Route exact path="/" component={Home} />
             <Route exact path="/home" component={Home} />

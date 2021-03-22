@@ -19,6 +19,10 @@ export const useStyles = makeStyles((theme: Theme) =>
             color: Color.wightColor,
            background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
            margin: '30px 0',
-        }
+        },
+        backdrop: {
+            zIndex: theme.zIndex.drawer + 1,
+            color: '#fff',
+        },
     })
 );
