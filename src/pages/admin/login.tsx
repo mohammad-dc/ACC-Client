@@ -5,9 +5,9 @@ import Cookies from "universal-cookie";
 import { observer } from "mobx-react-lite";
 import { adminContext } from "../../store/store";
 import {Button, Typography, Backdrop, CircularProgress, Snackbar} from "@material-ui/core";
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import {Formik, Form} from "formik";
 import CustomField from "../../components/CustomeField";
+import Alert from "../../components/Alert";
 import {AdminSchema} from "../../validations/admin";
 import {ThemeProvider } from '@material-ui/core/styles';
 import {theme} from "../../constants/theme";
@@ -17,10 +17,6 @@ let initialValues = {
     email: '',
     password: ''
 };
-
-function Alert(props: AlertProps) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 const Login = observer(() => {
     const classes = useStyles();

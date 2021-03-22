@@ -32,7 +32,7 @@ const PUT = (endpoint: string, body: {}) => {
     });
 }
 
-const GET = (endpoint: string, body: {}) => {
+const GET = (endpoint: string) => {
     return axios.get(`${BASE_URL}/${endpoint}`, {
         headers: {
             'Authorization': `Bearer ${cookies.get('adminToken')}`,
@@ -40,7 +40,7 @@ const GET = (endpoint: string, body: {}) => {
     });
 }
 
-const DELETE = (endpoint: string, body: {}) => {
+const DELETE = (endpoint: string) => {
     return axios.delete(`${BASE_URL}/${endpoint}`, {
         headers: {
             'Authorization': `Bearer ${cookies.get('adminToken')}`,
@@ -49,7 +49,7 @@ const DELETE = (endpoint: string, body: {}) => {
 }
 
 //user
-const getNoToken = (endpoint: string, body: {}) => {
+const getNoToken = (endpoint: string) => {
     return axios.get(`${BASE_URL}/${endpoint}`);
 }
 

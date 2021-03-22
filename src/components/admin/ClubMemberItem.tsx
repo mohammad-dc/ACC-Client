@@ -7,7 +7,7 @@ import {clubMembersContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 import {useStyles} from "../../assets/styles/admin/ClubMemberItemStyles";
 
-const ClubMemberItem: React.FC<IClubMember> = observer(({name, rank, image, ID}: IClubMember) => {
+const ClubMemberItem: React.FC<IClubMember> = observer(({first_name, last_name, rank, image, ID}: IClubMember) => {
     const classes = useStyles();
     const clubMembers = React.useContext(clubMembersContext);
 
@@ -15,9 +15,9 @@ const ClubMemberItem: React.FC<IClubMember> = observer(({name, rank, image, ID}:
         <div className={classes.root}>
             <Box className={classes.BoxFlex}>
                 <Box className={classes.BoxFlexCenter}>
-                    <Avatar src={image} alt={name} className={classes.avatar}/>
+                    <Avatar src={image} alt={`${first_name} ${last_name}`} className={classes.avatar}/>
                     <Box className={classes.BoxFlexBlock}>
-                        <Typography variant="h6">{name}</Typography>
+                        <Typography variant="h6">{`${first_name} ${last_name}`}</Typography>
                         <Typography className={classes.rankText}>الرتبة: {rank}</Typography>
                     </Box>
                 </Box>

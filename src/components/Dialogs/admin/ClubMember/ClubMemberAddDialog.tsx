@@ -1,6 +1,6 @@
 import React from 'react'
-import {Dialog , DialogActions , DialogContent, DialogTitle, Button, FormControlLabel, 
-    FormControl, InputLabel, MenuItem, Select, Box, IconButton, Avatar } from "@material-ui/core";
+import {Dialog , DialogActions , DialogContent, DialogTitle, Button, 
+    FormControl, InputLabel, MenuItem, Select, Box, IconButton, Avatar, CircularProgress } from "@material-ui/core";
 import { TransitionDialog } from '../../../transitionDialog';
 import {Formik, Form} from "formik";
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
@@ -10,7 +10,7 @@ import {clubMembersContext} from "../../../../store/store";
 import {observer} from "mobx-react-lite";
 
 let initialValues = {
-    irst_name: '',
+    first_name: '',
     last_name: '',
     rank: ''
 }
@@ -18,7 +18,8 @@ let initialValues = {
 const ClubMemberAddDialog = observer(() => {
     const clubMembers = React.useContext(clubMembersContext);
     const [rank, setRank] = React.useState('');
-    
+    const [image, setImage] = React.useState('');
+
     const handleClose = () => {
         clubMembers.closeAddDialog()
     };
@@ -26,6 +27,14 @@ const ClubMemberAddDialog = observer(() => {
      const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         setRank(event.target.value as string);
     };
+
+    const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        if (e.target.files && e.target.files[0]) {
+            const value = e.target.files[0]
+            setImage(URL.createObjectURL(value));
+        }
+  }
+
     return (
         <Dialog
         open={clubMembers.isAddDialogOpen}
@@ -36,58 +45,67 @@ const ClubMemberAddDialog = observer(() => {
         aria-describedby="alert-dialog-slide-description"
       >
           <DialogTitle id="alert-dialog-slide-title">اضافة عضو للنادي</DialogTitle>
-          <DialogContent>
               <Formik
               initialValues={initialValues}
               validationSchema={ClubMemberSchema}
               onSubmit={async (values, {setSubmitting}) => {
-                setSubmitting(true); 
+                setSubmitting(true);
+                clubMembers.createAdminClubMembers(values);
                 }}
               >
                 {({isSubmitting}) =>(
                     <Form>
-                         <Box style={{position: 'relative', width: 'fit-content', margin: '0 auto'}}>
-                                    <Avatar style={{width: '200px', height: '200px', position: 'relative'}}/>
-                                    <Box style={{position: 'absolute', bottom: 0, left: 0}}>
-                                        <input accept="image/*" style={{display: 'none'}} id="icon-button-file" type="file" />
-                                        <label htmlFor="icon-button-file">
-                                            <IconButton color="primary" style={{background: '#eee'}} aria-label="upload picture" component="span">
+                        <DialogContent>
+                            <Box style={{position: 'relative', width: 'fit-content', margin: '0 auto'}}>
+                                <Avatar src={image} style={{width: '200px', height: '200px', position: 'relative'}}/>
+                                <Box style={{position: 'absolute', bottom: 0, left: 0}}>
+                                    <input onChange={handleFileSelected} accept="image/*" style={{display: 'none'}} id="icon-button-file" type="file" />
+                                    <label htmlFor="icon-button-file">
+                                        <IconButton color="primary" style={{background: '#eee'}} aria-label="upload picture" component="span">
                                             <PhotoCamera style={{color: '#aaa'}}/>
-                                            </IconButton>
-                                        </label>
-                                    </Box>
+                                        </IconButton>
+                                    </label>
                                 </Box>
-                        <CustomField placeholder="االسم الأول" name="first_name" type="text" label="الاسم الأول" />
-                        <CustomField placeholder="الاسم الأخير" name="last_name" type="text" label="الاسم الأخير" />
-                        <FormControl variant="outlined" style={{width: '100%', marginTop: '10px'}}>
-                                                <InputLabel id="demo-simple-select-outlined-label">الرتبة</InputLabel>
-                                                <Select
-                                                labelId="demo-simple-select-outlined-label"
-                                                id="demo-simple-select-outlined"
-                                                value={rank}
-                                                onChange={handleChange}
-                                                label="Age"
-                                                >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value={10}>Ten</MenuItem>
-                                                <MenuItem value={20}>Twenty</MenuItem>
-                                                <MenuItem value={30}>Thirty</MenuItem>
-                                                </Select>
-                        </FormControl>
+                            </Box>
+                            <CustomField placeholder="الاسم الأول" name="first_name" type="text" label="الاسم الأول" />
+                            <CustomField placeholder="الاسم الأخير" name="last_name" type="text" label="الاسم الأخير" />
+                            <FormControl variant="outlined" style={{width: '100%', marginTop: '10px'}}>
+                                <InputLabel id="demo-simple-select-outlined-label">الرتبة</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-outlined-label"
+                                    id="demo-simple-select-outlined"
+                                    value={rank}
+                                    onChange={handleChange}
+                                    label="الرتبة"
+                                >
+                                    <MenuItem value="">
+                                        <em>None</em>
+                                    </MenuItem>
+                                    <MenuItem value='مسؤول'>
+                                        مسؤول
+                                    </MenuItem>
+                                    <MenuItem value='مساعد'>
+                                        مساعد
+                                    </MenuItem>
+                                    <MenuItem value='مشارك'>
+                                        مشارك
+                                    </MenuItem>
+                                </Select>
+                            </FormControl>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button color="primary" onClick={handleClose}>
+                                الغاء
+                            </Button>
+                            <Button color="primary" disabled={isSubmitting} type="submit">
+                                {
+                                    clubMembers.isLoading? <CircularProgress size={50}/> : 'اضافة'
+                                } 
+                            </Button>
+                        </DialogActions>
                     </Form>
                 )}
               </Formik>
-          </DialogContent>
-          <DialogActions>
-            <Button color="primary">
-                الغاء
-            </Button>
-            <Button color="primary">
-                اضافة
-            </Button>
-          </DialogActions>
       </Dialog>
     )
 })
