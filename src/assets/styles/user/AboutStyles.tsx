@@ -9,7 +9,7 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
         image: {
             width:'50%',
-            height: '80%'
+            height: '100%'
         },
         typographyGrid: {
            display: 'flex',
