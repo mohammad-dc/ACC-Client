@@ -17,6 +17,7 @@ import Login from "./pages/admin/login";
 import Home from "./pages/user/Home";
 import About from "./pages/user/About";
 import Courses from "./pages/user/Courses";
+import EducationalStaff from "./pages/user/EducationalStaff";
 
 import NotFound from "./pages/NotFound";
 // Configure JSS
@@ -39,6 +40,7 @@ const App = () =>{
             <Route exact path="/home" component={Home} />
             <Route exact path="/about" component={About} />
             <Route exact path="/courses" component={Courses} />
+            <Route exact path="/educational_staff" component={EducationalStaff} />
             <Route exact path="*" component={NotFound} />
           </Switch>
         </Router>

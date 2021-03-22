@@ -1,5 +1,6 @@
 import React from 'react'
 import UserLayout from "../../layouts/user/userLayout";
+import Footer from "../../components/Footer/Footer";
 import {Box, Grid, Tabs, Tab   } from "@material-ui/core";
 import {useTheme} from "@material-ui/core/styles";
 import TabPanel from "../../components/TabPanel";
@@ -66,6 +67,7 @@ const Courses = () => {
                         </TabPanel>
                     </SwipeableViews>
                 </Box>
+                <Footer />
         </UserLayout>
     )
 }
