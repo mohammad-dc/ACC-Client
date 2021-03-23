@@ -15,7 +15,7 @@ const ClubMemberItem: React.FC<IClubMember> = observer(({first_name, last_name, 
         <div className={classes.root}>
             <Box className={classes.BoxFlex}>
                 <Box className={classes.BoxFlexCenter}>
-                    <Avatar src={image} alt={`${first_name} ${last_name}`} className={classes.avatar}/>
+                    <Avatar src={`http://localhost:4000/uploads/${image.trim()}`} alt={`${first_name} ${last_name}`} className={classes.avatar}/>
                     <Box className={classes.BoxFlexBlock}>
                         <Typography variant="h6">{`${first_name} ${last_name}`}</Typography>
                         <Typography className={classes.rankText}>الرتبة: {rank}</Typography>

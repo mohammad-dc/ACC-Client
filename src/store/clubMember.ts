@@ -1,4 +1,4 @@
-import {makeAutoObservable, action} from "mobx";
+import {makeAutoObservable, action, autorun } from "mobx";
 import API from "../api/utils/requests";
 import {IClubMember} from "../interfaces/clubMember";
 import {IResponse} from "../interfaces/response";
@@ -41,7 +41,7 @@ export class ClubMemberStore {
     }
 
     // admin
-    @action getAdminClubMembers = () =>{
+    getAdminClubMembers = () =>{
         this.isLoading = true;
         API.GET('admin/club-members/get')
             .then(res => {

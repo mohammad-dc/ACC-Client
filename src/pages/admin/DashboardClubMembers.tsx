@@ -1,6 +1,6 @@
 import React from 'react'
 import AdminLayout from "../../layouts/admin/adminLayout";
-import {Box, Typography, Fab, Grid, CircularProgress, Snackbar} from "@material-ui/core";
+import {Box, Typography, Fab, Grid, CircularProgress} from "@material-ui/core";
 import Alert from "../../components/Alert";
 import {RiUserAddLine} from "react-icons/ri";
 import NoData from "../../components/NoData/NoData";
@@ -16,15 +16,6 @@ import {useStyles} from "../../assets/styles/admin/pagesStanderdStyle";
 const DashboardClubMembers = observer(() => {
     const classes = useStyles();
     const clubMembers = React.useContext(clubMembersContext);
-    const [open, setOpen] = React.useState(clubMembers.response.success);
-
-    const handleCloseAlert = (event?: React.SyntheticEvent, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-  
-        setOpen(false);
-    };
 
     return (
         <AdminLayout>
@@ -65,16 +56,6 @@ const DashboardClubMembers = observer(() => {
                 }
                  {
                     clubMembers.isDeleteDialogOpen? <ClubMemberDeleteDialog />: ""
-                }
-
-                {
-                    clubMembers.response.success
-                    ?
-                    <Snackbar open={open} autoHideDuration={2000} onClose={handleCloseAlert}>
-                        <Alert onClose={handleCloseAlert} severity={clubMembers.response.success? 'success' : 'error'}>
-                            {clubMembers.response.message}
-                        </Alert>
-                    </Snackbar> : ''
                 }
            </div>
         </AdminLayout>
