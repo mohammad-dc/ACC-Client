@@ -17,9 +17,7 @@ const useStyles = makeStyles({
   },
 });
 
-let date = new Date().toDateString();
-
-const NewsItemCard: React.FC<INew> = observer(({ID, title, description, image}: INew) =>{
+const NewsItemCard: React.FC<INew> = observer(({id, title, description, image, date_time}: INew) =>{
     const classes = useStyles();
     const news = React.useContext(newsContext);
 
@@ -38,7 +36,7 @@ const NewsItemCard: React.FC<INew> = observer(({ID, title, description, image}: 
                 {title}
             </Typography>
             <Typography gutterBottom>
-                {date}
+                {date_time}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
                 {description}
@@ -46,10 +44,10 @@ const NewsItemCard: React.FC<INew> = observer(({ID, title, description, image}: 
             </CardContent>
         </CardActionArea>
         <CardActions>
-            <Button size="small" color="primary" onClick={() => news.openDeleteDialog()}>
+            <Button size="small" color="primary" onClick={() => news.openDeleteDialog(id)}>
             حذف
             </Button>
-            <Button size="small" color="primary" onClick={() => news.openEditDialog()}>
+            <Button size="small" color="primary" onClick={() => news.openEditDialog(id)}>
             تعديل
             </Button>
         </CardActions>

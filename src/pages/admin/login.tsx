@@ -60,7 +60,7 @@ const Login = observer(() => {
                                     {
                                         sameSite: 'strict',
                                         path: '/admin/dashboard',
-                                        expires: new Date(new Date().getTime() + 36 * 10000),
+                                        expires: new Date(new Date().getTime() + 60 * 60 * 10000),
                                         domain : 'localhost',
                                         httpOnly: false,
                                         secure: false

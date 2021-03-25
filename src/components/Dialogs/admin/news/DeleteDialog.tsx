@@ -2,8 +2,9 @@ import React from 'react'
 import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Typography } from "@material-ui/core";
 import {newsContext} from "../../../../store/store";
 import { TransitionDialog } from '../../../transitionDialog';
+import {observer} from "mobx-react-lite";
 
-const DeleteDialog = () => {
+const DeleteDialog = observer(() => {
     const news = React.useContext(newsContext);
 
     const handleClose = () => {
@@ -26,15 +27,15 @@ const DeleteDialog = () => {
              </form>
           </DialogContent>
           <DialogActions>
-            <Button color="primary">
+            <Button color="primary" onClick={handleClose}>
                 الغاء
             </Button>
-            <Button color="primary">
+            <Button color="primary" onClick={news.deleteAdminNew}>
                 حذف
             </Button>
           </DialogActions>
       </Dialog>
     )
-}
+})
 
 export default DeleteDialog

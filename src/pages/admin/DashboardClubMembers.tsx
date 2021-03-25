@@ -17,6 +17,9 @@ const DashboardClubMembers = observer(() => {
     const classes = useStyles();
     const clubMembers = React.useContext(clubMembersContext);
 
+    React.useEffect(() => {
+        clubMembers.getAdminClubMembers();
+    }, [clubMembers.response])
     return (
         <AdminLayout>
             <div className={classes.root}>
@@ -39,7 +42,7 @@ const DashboardClubMembers = observer(() => {
                                 {
                                     clubMembers.clubMember.map((item: IClubMember, index: number) => (
                                         <Grid item xs={12} md={6} lg={3} xl={3} key={index}>
-                                            <ClubMemberItem first_name={item.first_name} last_name={item.last_name} rank={item.rank} image={item.image} ID={item.ID}/>
+                                            <ClubMemberItem first_name={item.first_name} last_name={item.last_name} rank={item.rank} image={item.image} id={item.id}/>
                                         </Grid>
                                     ))
                                 }

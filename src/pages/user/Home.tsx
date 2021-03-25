@@ -7,10 +7,23 @@ import {Box, Typography, Grid} from "@material-ui/core";
 import SliderShow from "../../components/SliderShow";
 import NewsCard from "../../components/user/newCard";
 import Footer from "../../components/Footer/Footer";
+import {IClubMember} from "../../interfaces/clubMember";
+import {observer} from "mobx-react-lite";
+import { clubMembersContext } from "../../store/store";
+import { newsContext } from "../../store/store";
 import {useStyles} from "../../assets/styles/user/HomeStyles";
+import { INew } from '../../interfaces/news';
 
-const Home = () => {
+const Home = observer(() => {
     const classes = useStyles();
+    const clubMembers = React.useContext(clubMembersContext);
+    const news = React.useContext(newsContext);
+
+    let newsList = [
+        news.newsClient[news.newsClient.length - 1],
+        news.newsClient[news.newsClient.length - 2],
+        news.newsClient[news.newsClient.length - 3]
+    ];
 
     return (
         <UserLayout>
@@ -24,15 +37,14 @@ const Home = () => {
                     <Typography variant="h3">الاخبار</Typography>
 
                     <Grid container spacing={2}  className={classes.newsCardsContainer}>
-                        <Grid item xs={12} md={6} lg={4} > 
-                            <NewsCard ID={1} title='بداية العام الدراسي' description="لا يوجد وصف للان" image="https://ptuk.edu.ps/wp-content/uploads/2018/12/xx.jpg" />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={4} > 
-                            <NewsCard ID={1} title='بداية العام الدراسي' description="لا يوجد وصف للان" image="https://ptuk.edu.ps/wp-content/uploads/2018/12/xx.jpg" />
-                        </Grid>
-                        <Grid item xs={12} md={6} lg={4} > 
-                            <NewsCard ID={1} title='بداية العام الدراسي' description="لا يوجد وصف للان" image="https://ptuk.edu.ps/wp-content/uploads/2018/12/xx.jpg" />
-                        </Grid>
+                        {
+                            news.newsClient.map((item: INew) => (
+                                <div key={item.id}>
+                                    <NewsCard id={item.id} title={item.title} description={item.description} image={`http://localhost:4000/uploads/${item.image?.trim()}`} date_time={item.date_time} />
+                                </div>
+                            ))
+                        }   
+                     
                     </Grid>
 
                     <Link to="/more_news" >استكشف المزيد من الاخبار؟</Link>
@@ -41,14 +53,13 @@ const Home = () => {
                 <Box className={classes.ClubMembersBox}>
                     <Typography variant="h3">اعضاء النادي</Typography>
                     <SliderShow>
-                        <ClubMemberCard />
-                        <ClubMemberCard />
-                        <ClubMemberCard />
-                        <ClubMemberCard />
-                        <ClubMemberCard />
-                        <ClubMemberCard />
-                        <ClubMemberCard />
-                        <ClubMemberCard />
+                        {
+                            clubMembers.clubMemberClient.map((item: IClubMember) => (
+                                <div key={item.id}>
+                                    <ClubMemberCard id={item.id} first_name={item.first_name} last_name={item.last_name} image={`http://localhost:4000/uploads/${item.image.trim()}`} rank={item.rank}/>
+                                </div>
+                            ))
+                        }
                     </SliderShow>
                 </Box>
                 <div style={{height: '300px'}}></div>
@@ -56,6 +67,6 @@ const Home = () => {
             </div>
         </UserLayout>
     )
-}
+})
 
 export default Home

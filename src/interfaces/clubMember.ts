@@ -3,5 +3,5 @@ export interface IClubMember {
     last_name: string;
     rank: string;
     image: string;
-    ID: number;
+    id: number;
 }

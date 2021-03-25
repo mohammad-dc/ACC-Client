@@ -7,7 +7,7 @@ import {clubMembersContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 import {useStyles} from "../../assets/styles/admin/ClubMemberItemStyles";
 
-const ClubMemberItem: React.FC<IClubMember> = observer(({first_name, last_name, rank, image, ID}: IClubMember) => {
+const ClubMemberItem: React.FC<IClubMember> = observer(({first_name, last_name, rank, image, id}: IClubMember) => {
     const classes = useStyles();
     const clubMembers = React.useContext(clubMembersContext);
 
@@ -23,12 +23,12 @@ const ClubMemberItem: React.FC<IClubMember> = observer(({first_name, last_name, 
                 </Box>
                 <Box className={classes.BoxFlexCenter}>
                     <Tooltip title="حذف">
-                        <IconButton onClick={() => clubMembers.openDeleteDialog()}>
+                        <IconButton onClick={() => clubMembers.openDeleteDialog(id)}>
                             <MdDeleteForever />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title='تعديل'>
-                        <IconButton onClick={() => clubMembers.openEditDialog()}>
+                        <IconButton onClick={() => clubMembers.openEditDialog(id)}>
                             <RiEdit2Fill />
                         </IconButton>
                     </Tooltip>

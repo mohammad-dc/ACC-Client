@@ -5,6 +5,9 @@ import rtl from 'jss-rtl';
 import { StylesProvider, jssPreset } from '@material-ui/core/styles';
 import ProtectedRoute from "./routes/ProtectedRoute";
 import './App.css';
+// store context
+import {clubMembersContext, newsContext} from "./store/store";
+
 // Admin pages
 import DashboardNews from "./pages/admin/DashboardNews";
 import DashboardClubMembers from "./pages/admin/DashboardClubMembers";
@@ -22,11 +25,19 @@ import EducationalStaff from "./pages/user/EducationalStaff";
 import OutstandingStudents from "./pages/user/OutstandingStudents";
 import StudentsHelpClub from "./pages/user/StudentsHelpClub";
 
+// not Found Page
 import NotFound from "./pages/NotFound";
+
 // Configure JSS
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 
 const App = () =>{
+  const clubMembers = React.useContext(clubMembersContext);
+  const news = React.useContext(newsContext);
+
+  clubMembers.getClubMembers();
+  news.getNews();
+  
   return (
     <StylesProvider  jss={jss}>
       <div className="App">

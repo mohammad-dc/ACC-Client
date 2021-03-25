@@ -1,5 +1,5 @@
 import React from 'react'
-import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Box } from "@material-ui/core";
+import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Box, CircularProgress } from "@material-ui/core";
 import { TransitionDialog } from '../../../transitionDialog';
 import {Formik, Form} from "formik";
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
@@ -11,15 +11,22 @@ import DefaultImage from "../../../../assets/images/image.png";
 
 let initialValues = {
     title: '',
-    description: ''
+    description: '',
+    image: '',
 }
 
 const AddDialog = observer(() => {
     const news = React.useContext(newsContext);
-    
+    const [success, setSuccess] = React.useState(false);
+    const [image, setImage] = React.useState('');
+
     const handleClose = () => {
         news.closeAddDialog()
     };
+
+    React.useEffect(() => {
+        news.getAdminNews();
+    }, []);
 
     return (
         <Dialog
@@ -36,16 +43,34 @@ const AddDialog = observer(() => {
               validationSchema={NewsSchema}
               onSubmit={async (values, {setSubmitting}) => {
                 setSubmitting(true); 
+                let data = new FormData();
+                data.append('image', values.image);
+                data.append('title', values.title);
+                data.append('description', values.description);
+                await news.createAdminNews(data);
+                setSuccess(news.response.success);
                 }}
             >
-                {({isSubmitting}) =>(
+                {(formProps) =>(
                       
                     <Form>
                         <DialogContent>
                             <Box>
-                                <img src={DefaultImage} alt="اضف صورة" style={{display: 'block', margin: '5px auto'}}/>
+                                <img src={image === ''? DefaultImage: image} alt="اضف صورة" style={{display: 'block', margin: '5px auto'}}/>
                                  <Box>
-                                    <input accept="image/*" style={{display: 'none'}} id="icon-button-file" type="file" />
+                                    <input 
+                                    accept="image/*"
+                                    style={{display: 'none'}}
+                                    id="icon-button-file"
+                                    type="file"
+                                    name="image"
+                                    onChange={(e) => {
+                                        if (e.target.files && e.target.files[0]) {
+                                            const value = e.target.files[0]
+                                            setImage(URL.createObjectURL(value));
+                                            formProps.setFieldValue('image', e.target.files[0]);
+                                        }
+                                    }} />
                                     <label htmlFor="icon-button-file">
                                         <Button color="primary" style={{background: '#eee'}} aria-label="upload picture" component="span">
                                             <PhotoCamera style={{color: '#aaa'}}/> اضف صورة
@@ -57,11 +82,13 @@ const AddDialog = observer(() => {
                             <CustomField placeholder="الوصف" name="description" type="text" label="الوصف" multiline={true}/>
                         </DialogContent>
                         <DialogActions>
-                            <Button color="primary">
+                            <Button color="primary" onClick={handleClose}>
                                 الغاء
                             </Button>
-                            <Button color="primary">
-                                اضافة
+                            <Button color="primary" type="submit">
+                                {
+                                    news.isLoading? <CircularProgress size={20}/> : 'اضافة'
+                                } 
                             </Button>
                         </DialogActions>
                     </Form>

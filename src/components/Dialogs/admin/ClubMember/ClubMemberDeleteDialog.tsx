@@ -2,8 +2,9 @@ import React from 'react'
 import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Typography } from "@material-ui/core";
 import {clubMembersContext} from "../../../../store/store";
 import { TransitionDialog } from '../../../transitionDialog';
+import {observer} from "mobx-react-lite";
 
-const ClubMemberDeleteDialog = () => {
+const ClubMemberDeleteDialog = observer(() => {
     const clubMembers = React.useContext(clubMembersContext);
 
     const handleClose = () => {
@@ -25,15 +26,15 @@ const ClubMemberDeleteDialog = () => {
              </form>
           </DialogContent>
           <DialogActions>
-            <Button color="primary">
+            <Button color="primary" onClick={handleClose}>
                 الغاء
             </Button>
-            <Button color="primary">
+            <Button color="primary" onClick={clubMembers.deleteAdminClubMember}>
                 حذف
             </Button>
           </DialogActions>
       </Dialog>
     )
-}
+})
 
 export default ClubMemberDeleteDialog

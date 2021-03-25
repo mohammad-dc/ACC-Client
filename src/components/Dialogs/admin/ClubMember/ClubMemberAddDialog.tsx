@@ -3,7 +3,7 @@ import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Box, IconBu
 import Alert from "../../../Alert";
 import { TransitionDialog } from '../../../transitionDialog';
 import DrpoDownProps from "../../../DropDownList";
-import {Formik, Form, Field} from "formik";
+import {Formik, Form} from "formik";
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import CustomField from "../../../CustomeField";
 import {ClubMemberSchema} from "../../../../validations/clubMembers";
@@ -25,6 +25,7 @@ let initialValues = {
 
 const ClubMemberAddDialog = observer(() => {
     const clubMembers = React.useContext(clubMembersContext);
+    const [success, setSuccess] = React.useState(false);
     const [image, setImage] = React.useState('');
     const [open, setOpen] = React.useState(clubMembers.response.success);
 
@@ -41,6 +42,9 @@ const ClubMemberAddDialog = observer(() => {
         setOpen(false);
     };
 
+    React.useEffect(() => {
+        clubMembers.getAdminClubMembers();
+    }, [])
     return (
         <Dialog
         open={clubMembers.isAddDialogOpen}
@@ -62,6 +66,7 @@ const ClubMemberAddDialog = observer(() => {
                 data.append('last_name', values.last_name);
                 data.append('rank', values.rank);
                 await clubMembers.createAdminClubMembers(data);
+                setSuccess(clubMembers.response.success);
                 }}
               >
                 {(formProps) =>(
@@ -109,7 +114,7 @@ const ClubMemberAddDialog = observer(() => {
               </Formik>
               
                 {
-                    clubMembers.response.success
+                    success
                     ?
                     <Snackbar open={open} autoHideDuration={2000} onClose={handleCloseAlert}>
                         <Alert onClose={handleCloseAlert} severity={clubMembers.response.success? 'success' : 'error'}>
