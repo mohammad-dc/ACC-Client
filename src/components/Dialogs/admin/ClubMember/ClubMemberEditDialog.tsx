@@ -1,13 +1,12 @@
 import React from 'react'
 import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Box, IconButton, Avatar, CircularProgress } from "@material-ui/core";
-    import DrpoDownProps from "../../../DropDownList";
+import DrpoDownProps from "../../../DropDownList";
 import { TransitionDialog } from '../../../transitionDialog';
 import {Formik, Form} from "formik";
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import CustomField from "../../../CustomeField";
 import {ClubMemberSchema} from "../../../../validations/clubMembers";
 import {clubMembersContext} from "../../../../store/store";
-import {IClubMember} from "../../../../interfaces/clubMember";
 import {observer} from "mobx-react-lite";
 
 const ClubMemberEditDialog: React.FC = observer(() => {
@@ -53,13 +52,14 @@ const ClubMemberEditDialog: React.FC = observer(() => {
                 data.append('last_name', values.last_name);
                 data.append('rank', values.rank);
                 await clubMembers.updateAdminClubMember(data);
+                handleClose();
                 }}
               >
                 {(formProps) =>(
                     <Form>
                         <DialogContent>
                          <Box style={{position: 'relative', width: 'fit-content', margin: '0 auto'}}>
-                                    <Avatar src={initialValues.image} style={{width: '200px', height: '200px', position: 'relative'}}/>
+                                    <Avatar src={image === ''? initialValues.image : image} style={{width: '200px', height: '200px', position: 'relative'}}/>
                                      <Box style={{position: 'absolute', bottom: 0, left: 0}}>
                                         <input 
                                         accept="image/*"

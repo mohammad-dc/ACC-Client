@@ -1,6 +1,6 @@
 import React from 'react'
 import AdminLayout from "../../layouts/admin/adminLayout";
-import {Box, Typography, Fab, Grid, CircularProgress} from "@material-ui/core";
+import {Box, Typography, Fab, Grid, CircularProgress, Snackbar} from "@material-ui/core";
 import Alert from "../../components/Alert";
 import {RiUserAddLine} from "react-icons/ri";
 import NoData from "../../components/NoData/NoData";
@@ -16,10 +16,24 @@ import {useStyles} from "../../assets/styles/admin/pagesStanderdStyle";
 const DashboardClubMembers = observer(() => {
     const classes = useStyles();
     const clubMembers = React.useContext(clubMembersContext);
+    const [open, setOpen] = React.useState(false);
+    const [success, setSuccess] = React.useState(false);
+
+    const handleCloseAlert = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+  
+        setOpen(false);
+        setSuccess(false);
+    };
 
     React.useEffect(() => {
         clubMembers.getAdminClubMembers();
-    }, [clubMembers.response])
+        setSuccess(clubMembers.response.success);
+        setOpen(true);
+    }, [clubMembers.response]);
+
     return (
         <AdminLayout>
             <div className={classes.root}>
@@ -59,6 +73,16 @@ const DashboardClubMembers = observer(() => {
                 }
                  {
                     clubMembers.isDeleteDialogOpen? <ClubMemberDeleteDialog />: ""
+                }
+
+                 {
+                    success
+                    ?
+                    <Snackbar open={open} autoHideDuration={3000} onClose={handleCloseAlert}>
+                        <Alert onClose={handleCloseAlert} severity={clubMembers.response.success? 'success' : 'error'}>
+                            {clubMembers.response.message}
+                        </Alert>
+                    </Snackbar> : ''
                 }
            </div>
         </AdminLayout>

@@ -48,26 +48,26 @@ export class ClubMemberStore {
     getAdminClubMembers = () =>{
         this.isLoading = true;
         API.GET('admin/club-members/get')
-            .then(res => {
+            .then(async res => {
                 this.isLoading = false;
-                this.clubMember = res.data.results
+                this.clubMember = await res.data.results;
             })
-            .catch(error =>{
+            .catch(async error =>{
                 this.isLoading = false;
-                this.response = error.response.data;
+                this.response = await error.response.data;
             });
     }
 
     createAdminClubMembers = (values: {}) =>{
         this.isLoading = true;
         API.POST('admin/club-members/create', values)
-            .then(res => {
+            .then(async res => {
                 this.isLoading = false;
-                this.response = res.data;
+                this.response = await res.data;
             })
-            .catch(error =>{
+            .catch(async error =>{
                 this.isLoading = false;
-                this.response = error.response.data;
+                this.response = await error.response.data;
             });
     }
 

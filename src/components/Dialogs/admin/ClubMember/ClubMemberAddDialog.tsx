@@ -1,6 +1,5 @@
 import React from 'react'
-import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Box, IconButton, Avatar, CircularProgress, Snackbar } from "@material-ui/core";
-import Alert from "../../../Alert";
+import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Box, IconButton, Avatar, CircularProgress } from "@material-ui/core";
 import { TransitionDialog } from '../../../transitionDialog';
 import DrpoDownProps from "../../../DropDownList";
 import {Formik, Form} from "formik";
@@ -25,26 +24,11 @@ let initialValues = {
 
 const ClubMemberAddDialog = observer(() => {
     const clubMembers = React.useContext(clubMembersContext);
-    const [success, setSuccess] = React.useState(false);
     const [image, setImage] = React.useState('');
-    const [open, setOpen] = React.useState(clubMembers.response.success);
 
     const handleClose = () => {
         clubMembers.closeAddDialog()
     };
-
-    
-    const handleCloseAlert = (event?: React.SyntheticEvent, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-  
-        setOpen(false);
-    };
-
-    React.useEffect(() => {
-        clubMembers.getAdminClubMembers();
-    }, [])
     return (
         <Dialog
         open={clubMembers.isAddDialogOpen}
@@ -66,7 +50,7 @@ const ClubMemberAddDialog = observer(() => {
                 data.append('last_name', values.last_name);
                 data.append('rank', values.rank);
                 await clubMembers.createAdminClubMembers(data);
-                setSuccess(clubMembers.response.success);
+                handleClose();
                 }}
               >
                 {(formProps) =>(
@@ -112,16 +96,6 @@ const ClubMemberAddDialog = observer(() => {
                     </Form>
                 )}
               </Formik>
-              
-                {
-                    success
-                    ?
-                    <Snackbar open={open} autoHideDuration={2000} onClose={handleCloseAlert}>
-                        <Alert onClose={handleCloseAlert} severity={clubMembers.response.success? 'success' : 'error'}>
-                            {clubMembers.response.message}
-                        </Alert>
-                    </Snackbar> : ''
-                }
       </Dialog>
     )
 })

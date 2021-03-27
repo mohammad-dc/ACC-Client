@@ -1,5 +1,5 @@
 import React from 'react'
-import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Typography } from "@material-ui/core";
+import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Typography, CircularProgress } from "@material-ui/core";
 import {clubMembersContext} from "../../../../store/store";
 import { TransitionDialog } from '../../../transitionDialog';
 import {observer} from "mobx-react-lite";
@@ -10,6 +10,11 @@ const ClubMemberDeleteDialog = observer(() => {
     const handleClose = () => {
         clubMembers.closeDeleteDialog()
     };
+
+    const deleteClubMember = async () => {
+        await clubMembers.deleteAdminClubMember();
+        handleClose();
+    }
     return (
        <Dialog
         open={clubMembers.isDeleteDialogOpen}
@@ -29,8 +34,10 @@ const ClubMemberDeleteDialog = observer(() => {
             <Button color="primary" onClick={handleClose}>
                 الغاء
             </Button>
-            <Button color="primary" onClick={clubMembers.deleteAdminClubMember}>
-                حذف
+            <Button color="primary" onClick={deleteClubMember}>
+                {
+                    clubMembers.isLoading? <CircularProgress size={20}/> : 'حذف'
+                }
             </Button>
           </DialogActions>
       </Dialog>
