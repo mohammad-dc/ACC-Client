@@ -4,6 +4,6 @@ const urlMatches = /((https?):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-z
 export const EducationalStaffSchema = Yup.object().shape({
     first_name: Yup.string().required('يجب ملئ الحقل'),
     last_name: Yup.string().required('يجب ملئ الحقل'),
-    image: Yup.mixed(),
+    image: Yup.mixed().required(),
     facebook: Yup.string().matches(urlMatches, ' يجب ادخال رابط بالشكل الصحيح'),
 });

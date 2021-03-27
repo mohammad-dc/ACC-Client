@@ -7,7 +7,7 @@ import {educationalStaffContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 import {useStyles} from "../../assets/styles/admin/ClubMemberItemStyles";
 
-const EducationalStaffItemCard: React.FC<IEducationalStaff> = observer(({first_name, last_name, image, facebook, ID}: IEducationalStaff) => {
+const EducationalStaffItemCard: React.FC<IEducationalStaff> = observer(({first_name, last_name, image, facebook, id}: IEducationalStaff) => {
     const classes = useStyles();
     const educationalStaff = React.useContext(educationalStaffContext);
 
@@ -15,17 +15,17 @@ const EducationalStaffItemCard: React.FC<IEducationalStaff> = observer(({first_n
         <div className={classes.root}>
             <Box className={classes.BoxFlex}>
                 <Box className={classes.BoxFlexCenter}>
-                    <Avatar src={image} alt={`${first_name} ${last_name}`} className={classes.avatar}/>
+                    <Avatar src={`http://localhost:4000/uploads/${image.trim()}`} alt={`${first_name} ${last_name}`} className={classes.avatar}/>
                     <Typography variant="h6">{first_name} {last_name}</Typography>
                 </Box>
                 <Box className={classes.BoxFlexCenter}>
                     <Tooltip title="حذف">
-                        <IconButton onClick={() => educationalStaff.openDeleteDialog()}>
+                        <IconButton onClick={() => educationalStaff.openDeleteDialog(id)}>
                             <MdDeleteForever />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title='تعديل'>
-                        <IconButton onClick={() => educationalStaff.openEditDialog()}>
+                        <IconButton onClick={() => educationalStaff.openEditDialog(id)}>
                             <RiEdit2Fill />
                         </IconButton>
                     </Tooltip>

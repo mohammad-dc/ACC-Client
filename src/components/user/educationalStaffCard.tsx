@@ -11,7 +11,7 @@ const EducationalStaffCard = (props: IEducationalStaff) => {
     return (
         <div>
             <Box className={classes.root}>
-                <Avatar style={{width: '150px', height: '150px'}} src={props.image} alt={`${props.first_name} ${props.last_name}`} />
+                <Avatar style={{width: '150px', height: '150px'}} src={`http://localhost:4000/uploads/${props.image.trim()}`} alt={`${props.first_name} ${props.last_name}`} />
                 <Typography variant="h6">{`${props.first_name} ${props.last_name}`}</Typography>
                 <Link to={props.first_name}>
                     <FaFacebook className={classes.icon}/>
