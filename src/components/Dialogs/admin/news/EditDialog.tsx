@@ -45,6 +45,7 @@ const EditDialog = observer(() => {
                 data.append('title', values.title);
                 data.append('description', values.description);
                 await news.updateAdminNews(data);
+                handleClose();
                 }}
             >
                 {(formProps) =>(
@@ -52,7 +53,7 @@ const EditDialog = observer(() => {
                     <Form>
                         <DialogContent>
                             <Box>
-                                <img src={image === ''? initialValues.image : image} alt="اضف صورة" style={{display: 'block', margin: '5px auto'}}/>
+                                <img src={image === ''? initialValues.image : image} alt="اضف صورة" style={{display: 'block', margin: '5px auto', width: '100%', maxHeight: '500px'}}/>
                                  <Box>
                                     <input 
                                         accept="image/*"

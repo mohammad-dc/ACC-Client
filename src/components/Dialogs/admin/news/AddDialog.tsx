@@ -17,16 +17,11 @@ let initialValues = {
 
 const AddDialog = observer(() => {
     const news = React.useContext(newsContext);
-    const [success, setSuccess] = React.useState(false);
     const [image, setImage] = React.useState('');
 
     const handleClose = () => {
         news.closeAddDialog()
     };
-
-    React.useEffect(() => {
-        news.getAdminNews();
-    }, []);
 
     return (
         <Dialog
@@ -48,7 +43,7 @@ const AddDialog = observer(() => {
                 data.append('title', values.title);
                 data.append('description', values.description);
                 await news.createAdminNews(data);
-                setSuccess(news.response.success);
+                handleClose();
                 }}
             >
                 {(formProps) =>(
@@ -56,7 +51,7 @@ const AddDialog = observer(() => {
                     <Form>
                         <DialogContent>
                             <Box>
-                                <img src={image === ''? DefaultImage: image} alt="اضف صورة" style={{display: 'block', margin: '5px auto'}}/>
+                                <img src={image === ''? DefaultImage: image} alt="اضف صورة" style={{display: 'block', margin: '5px auto', width: '100%', maxHeight: '500px', height: '100%'}}/>
                                  <Box>
                                     <input 
                                     accept="image/*"

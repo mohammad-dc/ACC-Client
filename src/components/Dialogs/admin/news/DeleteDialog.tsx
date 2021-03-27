@@ -1,5 +1,5 @@
 import React from 'react'
-import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Typography } from "@material-ui/core";
+import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Typography, CircularProgress } from "@material-ui/core";
 import {newsContext} from "../../../../store/store";
 import { TransitionDialog } from '../../../transitionDialog';
 import {observer} from "mobx-react-lite";
@@ -10,6 +10,11 @@ const DeleteDialog = observer(() => {
     const handleClose = () => {
         news.closeDeleteDialog()
     };
+
+    const deleteNews = async() => {
+        await news.deleteAdminNew();
+        handleClose();
+    }
 
     return (
         <Dialog
@@ -30,8 +35,10 @@ const DeleteDialog = observer(() => {
             <Button color="primary" onClick={handleClose}>
                 الغاء
             </Button>
-            <Button color="primary" onClick={news.deleteAdminNew}>
-                حذف
+            <Button color="primary" onClick={deleteNews}>
+                {
+                    news.isLoading? <CircularProgress size={20}/> : 'حذف'
+                }
             </Button>
           </DialogActions>
       </Dialog>

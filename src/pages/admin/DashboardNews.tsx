@@ -1,7 +1,8 @@
 import React from 'react'
 import AdminLayout from "../../layouts/admin/adminLayout";
 import NewsItemCard from "../../components/admin/newsItemCard";
-import {Box, Typography, Fab, Grid, CircularProgress } from "@material-ui/core";
+import {Box, Typography, Fab, Grid, CircularProgress, Snackbar } from "@material-ui/core";
+import Alert from "../../components/Alert";
 import NoData from "../../components/NoData/NoData";
 import {CgFileAdd} from "react-icons/cg";
 import {INew} from "../../interfaces/news";
@@ -15,9 +16,24 @@ import {useStyles} from "../../assets/styles/admin/pagesStanderdStyle";
 const DashboardNews = observer(() => {
     const classes = useStyles();
     const news = React.useContext(newsContext);
+    const [open, setOpen] = React.useState(false);
+    const [success, setSuccess] = React.useState(false);
+
+    const handleCloseAlert = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+  
+        setOpen(false);
+        setSuccess(false);
+    };
+
     React.useEffect(() => {
         news.getAdminNews();
-    }, [])
+        setSuccess(news.response.success);
+        setOpen(true);
+    }, [news.response]);
+
     return (
         <AdminLayout>
             <div className={classes.root}>
@@ -59,6 +75,16 @@ const DashboardNews = observer(() => {
                  {
                     news.isDeleteDialogOpen? <DeleteDialog />: ""
                 }
+                {
+                    success
+                    ?
+                    <Snackbar open={open} autoHideDuration={3000} onClose={handleCloseAlert}>
+                        <Alert onClose={handleCloseAlert} severity={news.response.success? 'success' : 'error'}>
+                            {news.response.message}
+                        </Alert>
+                    </Snackbar> : ''
+                }
+
             </div>
         </AdminLayout>
     )
