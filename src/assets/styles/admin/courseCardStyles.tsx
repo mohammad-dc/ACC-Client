@@ -38,7 +38,8 @@ export const useStyles = makeStyles((theme: Theme) =>
             textAlign: 'left'
         },
         chip: {
-            margin: '5px'
+            margin: '5px',
+            cursor: 'pointer'
         }
     })
 );

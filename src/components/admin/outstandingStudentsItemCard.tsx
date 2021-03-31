@@ -7,7 +7,7 @@ import {outstandingStudentsContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 import {useStyles} from "../../assets/styles/admin/ClubMemberItemStyles";
 
-const OutstandingStudentsItemCard: React.FC<IOutstandinStudents> = observer(({ID, first_name, last_name, image, description}: IOutstandinStudents) => {
+const OutstandingStudentsItemCard: React.FC<IOutstandinStudents> = observer(({id, first_name, last_name, image, description}: IOutstandinStudents) => {
     const classes = useStyles();
     const outstandingStudents = React.useContext(outstandingStudentsContext);
 
@@ -20,12 +20,12 @@ const OutstandingStudentsItemCard: React.FC<IOutstandinStudents> = observer(({ID
                 </Box>
                 <Box className={classes.BoxFlexCenter}>
                     <Tooltip title="حذف">
-                        <IconButton onClick={() => outstandingStudents.openDeleteDialog()}>
+                        <IconButton onClick={() => outstandingStudents.openDeleteDialog(id)}>
                             <MdDeleteForever />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title='تعديل'>
-                        <IconButton onClick={() => outstandingStudents.openEditDialog()}>
+                        <IconButton onClick={() => outstandingStudents.openEditDialog(id)}>
                             <RiEdit2Fill />
                         </IconButton>
                     </Tooltip>

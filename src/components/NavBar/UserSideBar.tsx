@@ -95,13 +95,6 @@ const NavBar: React.FC = observer(({children}) => {
           ))}
         </List>
         <Typography component="div">
-        <Grid component="label" container alignItems="center" spacing={1}>
-          <Grid item style={{display: open? 'inline' : 'none'}}>Off</Grid>
-          <Grid item style={{ margin: '0 auto'}}>
-            <Switch disableRipple name="theme" onChange={() => appTheme.changeTheme()} checked={appTheme.isLightTheme}/>
-          </Grid>
-          <Grid item style={{display: open? 'inline' : 'none'}}>On</Grid>
-        </Grid>
       </Typography>
             </Drawer>
             <main className={classes.content}>

@@ -1,5 +1,5 @@
 export interface IOutstandinStudents {
-    ID: number;
+    id: number;
     first_name: string;
     last_name: string;
     image: string;

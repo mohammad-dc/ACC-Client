@@ -2,12 +2,12 @@ import React from 'react';
 import {Box, Avatar, Typography, IconButton, Tooltip} from "@material-ui/core";
 import {MdDeleteForever} from "react-icons/md";
 import {RiEdit2Fill} from "react-icons/ri";
-import {IStudentsHelpClub} from "../../interfaces/studentsHelpClub";
+import {IStudent} from "../../interfaces/student";
 import {studentsHelpclubContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 import {useStyles} from "../../assets/styles/admin/ClubMemberItemStyles";
 
-const StudentsHelpClubItemCard: React.FC<IStudentsHelpClub> = observer(({ID, first_name, last_name, image, description}: IStudentsHelpClub) => {
+const StudentsHelpClubItemCard: React.FC<IStudent> = observer(({id, first_name, last_name, image, description}: IStudent) => {
     const classes = useStyles();
     const studentsHelpClub = React.useContext(studentsHelpclubContext);
 
@@ -20,12 +20,12 @@ const StudentsHelpClubItemCard: React.FC<IStudentsHelpClub> = observer(({ID, fir
                 </Box>
                 <Box className={classes.BoxFlexCenter}>
                     <Tooltip title="حذف">
-                        <IconButton onClick={() => studentsHelpClub.openDeleteDialog()}>
+                        <IconButton onClick={() => studentsHelpClub.openDeleteDialog(id)}>
                             <MdDeleteForever />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title='تعديل'>
-                        <IconButton onClick={() => studentsHelpClub.openEditDialog()}>
+                        <IconButton onClick={() => studentsHelpClub.openEditDialog(id)}>
                             <RiEdit2Fill />
                         </IconButton>
                     </Tooltip>

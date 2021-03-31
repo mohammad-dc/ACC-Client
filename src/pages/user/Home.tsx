@@ -13,6 +13,7 @@ import { clubMembersContext } from "../../store/store";
 import { newsContext } from "../../store/store";
 import {useStyles} from "../../assets/styles/user/HomeStyles";
 import { INew } from '../../interfaces/news';
+import UserTheme from "../../constants/userTheme";
 
 const Home = observer(() => {
     const classes = useStyles();
@@ -26,46 +27,48 @@ const Home = observer(() => {
     ];
 
     return (
-        <UserLayout>
-            <div>
-                <Box className={classes.headerBox}>
-                    <img src={Logo} alt="ACC" className={classes.logo}/>
-                    <Typography variant="h4">نادي الحوسبة التطبيقية يرحب بكم</Typography>
-                </Box>
+        <UserTheme>
+            <UserLayout>
+                <div>
+                    <Box className={classes.headerBox}>
+                        <img src={Logo} alt="ACC" className={classes.logo}/>
+                        <Typography variant="h4">نادي الحوسبة التطبيقية يرحب بكم</Typography>
+                    </Box>
 
-                <Box className={classes.newsBox}>
-                    <Typography variant="h3">الاخبار</Typography>
+                    <Box className={classes.newsBox}>
+                        <Typography variant="h3">الاخبار</Typography>
 
-                    <Grid container spacing={2}  className={classes.newsCardsContainer}>
-                        {
-                            news.newsClient.map((item: INew) => (
-                                <div key={item.id}>
-                                    <NewsCard id={item.id} title={item.title} description={item.description} image={`http://localhost:4000/uploads/${item.image?.trim()}`} date_time={item.date_time} />
-                                </div>
-                            ))
-                        }   
-                     
-                    </Grid>
+                        <Grid container spacing={2}  className={classes.newsCardsContainer}>
+                            {
+                                news.newsClient.map((item: INew) => (
+                                    <Grid item xs={12} md={6} lg={4} key={item.id}>
+                                        <NewsCard id={item.id} title={item.title} description={item.description} image={`http://localhost:4000/uploads/${item.image?.trim()}`} date_time={item.date_time} />
+                                    </Grid>
+                                ))
+                            }   
+                        
+                        </Grid>
 
-                    <Link to="/more_news" >استكشف المزيد من الاخبار؟</Link>
-                </Box>
+                        <Link to="/more_news" >استكشف المزيد من الاخبار؟</Link>
+                    </Box>
 
-                <Box className={classes.ClubMembersBox}>
-                    <Typography variant="h3">اعضاء النادي</Typography>
-                    <SliderShow>
-                        {
-                            clubMembers.clubMemberClient.map((item: IClubMember) => (
-                                <div key={item.id}>
-                                    <ClubMemberCard id={item.id} first_name={item.first_name} last_name={item.last_name} image={`http://localhost:4000/uploads/${item.image.trim()}`} rank={item.rank}/>
-                                </div>
-                            ))
-                        }
-                    </SliderShow>
-                </Box>
-                <div style={{height: '300px'}}></div>
-                <Footer />
-            </div>
-        </UserLayout>
+                    <Box className={classes.ClubMembersBox}>
+                        <Typography variant="h3">اعضاء النادي</Typography>
+                        <SliderShow>
+                            {
+                                clubMembers.clubMemberClient.map((item: IClubMember) => (
+                                    <div key={item.id}>
+                                        <ClubMemberCard id={item.id} first_name={item.first_name} last_name={item.last_name} image={`http://localhost:4000/uploads/${item.image.trim()}`} rank={item.rank}/>
+                                    </div>
+                                ))
+                            }
+                        </SliderShow>
+                    </Box>
+                    <div style={{height: '300px'}}></div>
+                    <Footer />
+                </div>
+            </UserLayout>
+        </UserTheme>
     )
 })
 

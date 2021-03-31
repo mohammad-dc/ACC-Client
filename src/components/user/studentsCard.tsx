@@ -8,7 +8,7 @@ const StudentsCard = (props: IStudent) => {
 
     return (
         <div className={classes.root}>
-            <Avatar className={classes.image} src={props.image} alt={`${props.first_name} ${props.last_name}`}/>
+            <Avatar className={classes.image} src={`http://localhost:4000/uploads/${props.image.trim()}`} alt={`${props.first_name} ${props.last_name}`}/>
             <Typography variant="h5">{`${props.first_name} ${props.last_name}`}</Typography>
             <Button className={classes.btn}>المزيد؟</Button>
         </div>

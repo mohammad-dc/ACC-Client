@@ -1,35 +1,38 @@
 import React from 'react'
-import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Divider, 
-    FormControl, InputLabel, MenuItem, Select, Box, IconButton, Typography, Tooltip } from "@material-ui/core";
+import {Dialog, TextField, DialogActions , DialogContent, DialogTitle, CircularProgress, IconButton, Button, Divider, Tooltip, Typography, Box } from "@material-ui/core";
 import { TransitionDialog } from '../../../transitionDialog';
+import {ICourseInsert} from "../../../../interfaces/courseInsert";
+import {FiCheck} from "react-icons/fi";
+import {RiDeleteBin2Fill} from "react-icons/ri";
+import DrpoDownProps from "../../../DropDownList";
 import {Formik, Form} from "formik";
 import CustomField from "../../../CustomeField";
-import {CourseVedioSchema, CourseSchema} from "../../../../validations/courses";
-import {FiCheck} from "react-icons/fi";
+import {CourseSchema} from "../../../../validations/courses";
 import {coursesContext} from "../../../../store/store";
 import {observer} from "mobx-react-lite";
 
 const AddCourse = observer(() => {
     const courses = React.useContext(coursesContext);
-    const [type, setType] = React.useState('');
-    
+    const [videosList, setVideosList] = React.useState<string[]>([]);
 
-    let initialValues = {
+    let typeList = [
+        {key: 'اجباري', value: 'اجباري'},
+        {key: 'اختياري', value: 'اختياري'}
+    ];
+
+    let initialValues: ICourseInsert = {
         name: '',
         type:'',
-        exams_url: '',
-        summaries_url: '',
-        course_url: '',
-        vedios: [],
-        video_url: ''
+        setup: '',
+        exams: '',
+        summaries: '',
+        course: '',
+        video_url: '',
+        videos: [],
     }
 
     const handleClose = () => {
         courses.closeAddDialog()
-    };
-
-     const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        setType(event.target.value as string);
     };
 
     return (
@@ -42,64 +45,83 @@ const AddCourse = observer(() => {
         aria-describedby="alert-dialog-slide-description"
       >
           <DialogTitle id="alert-dialog-slide-title">اضافة مادة</DialogTitle>
-          <DialogContent>
+
              <Formik
               initialValues={initialValues}
               validationSchema={CourseSchema}
+              
               onSubmit={async (values, {setSubmitting}) => {
-                setSubmitting(true); 
+                setSubmitting(true);
+                values.videos = videosList;
+                const { 'video_url': _, ...rest} = values;
+                console.log(rest)
+                await courses.createAdminCourse(rest);
+                handleClose();
                 }}
               >
-                {({isSubmitting}) =>(
+                {(props) =>(
                     <Form>
+                        <DialogContent>
                         <CustomField placeholder="اسم المادة" name="name" type="text" label="اسم المادة" />
-                        <FormControl variant="outlined" style={{width: '100%', marginTop: '10px'}}>
-                                                <InputLabel id="demo-simple-select-outlined-label">نوع المادة</InputLabel>
-                                                <Select
-                                                labelId="demo-simple-select-outlined-label"
-                                                id="demo-simple-select-outlined"
-                                                value={type}
-                                                onChange={handleChange}
-                                                label="نوع المادة"
-                                                >
-                                                <MenuItem value="">
-                                                    <em>None</em>
-                                                </MenuItem>
-                                                <MenuItem value="اجباري">
-                                                    اجباري
-                                                </MenuItem>
-                                                <MenuItem value="اختياري">
-                                                    اختياري
-                                                </MenuItem>
-                                                </Select>
-                        </FormControl>
-                        <CustomField placeholder="رابط الامتحانات" name="exams_url" type="text" label="رابط الامتحانات" />
-                        <CustomField placeholder="رابط التلاخيص" name="summaries_url" type="text" label="رابط التلاخيص" />
-                        <CustomField placeholder="رابط المادة" name="course_url" type="text" label="رابط المادة" />
+                        <DrpoDownProps label="نوع المادة" name="type" options={typeList}/>
+                        <CustomField placeholder="setup" name="setup" type="text" label="setup" />
+                        <CustomField placeholder="رابط الامتحانات" name="exams" type="text" label="رابط الامتحانات" />
+                        <CustomField placeholder="رابط التلاخيص" name="summaries" type="text" label="رابط التلاخيص" />
+                        <CustomField placeholder="رابط المادة" name="course" type="text" label="رابط المادة" />
                         <Divider light/>
                         <Typography variant="h6">
                             روابط الفيديوهات
                         </Typography>
-                        <Box style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                            <CustomField placeholder="رابط فيديو" name="video_url" type="text" label="رابط فيديو" />
+                         <Box style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                            <CustomField placeholder="رابط فيديو" name="video_url" type="text" label="رابط فيديو"/>
                             <Tooltip title="حفظ">
-                                <IconButton>
+                                <IconButton onClick={() => {
+                                    setVideosList([...videosList, props.values.video_url]);
+                                    }}>
                                     <FiCheck />
                                 </IconButton>
                             </Tooltip>
                         </Box>
+                        {
+                            videosList.length > 0?
+                            videosList.map((video: string, index: number) =>(
+                                <Box style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                                    <TextField 
+                                    style={{width: '100%', marginTop: '10px'}}
+                                    variant="outlined"
+                                    placeholder="رابط فيديو"
+                                    name={`video_url-${index}`}
+                                    type="text"
+                                    label="رابط فيديو"
+                                    value={video}
+                                    InputProps={{
+                                        readOnly: true,
+                                    }}/>
+                                    <Tooltip title="حذف">
+                                        <IconButton onClick={() => {
+                                            let newList = videosList.filter((el: string, indexFliter: number) => indexFliter !== index);
+                                            setVideosList([...newList]);
+                                            }}>
+                                            <RiDeleteBin2Fill />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Box>
+                            )): ''
+                        }
+                        </DialogContent>
+                        <DialogActions>
+                            <Button color="primary" onClick={handleClose}>
+                                الغاء
+                            </Button>
+                            <Button color="primary" type="submit">
+                                {
+                                    courses.isLoading? <CircularProgress size={20}/> : 'اضافة'
+                                } 
+                            </Button>
+                        </DialogActions>
                     </Form>
                 )}
               </Formik>
-          </DialogContent>
-          <DialogActions>
-            <Button color="primary"  onClick={() => courses.closeAddDialog()}>
-                الغاء
-            </Button>
-            <Button color="primary">
-                اضافة
-            </Button>
-          </DialogActions>
       </Dialog>
     )
 })

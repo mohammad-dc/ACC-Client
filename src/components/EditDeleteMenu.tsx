@@ -6,7 +6,11 @@ import {RiEdit2Fill} from "react-icons/ri";
 import {coursesContext} from "../store/store";
 import {observer} from "mobx-react-lite";
 
-const EditDeleteMenu = observer(() => {
+interface IdProps{
+    id: number
+};
+
+const EditDeleteMenu: React.FC<IdProps> = observer(({id}: IdProps) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const courses = React.useContext(coursesContext);
 
@@ -33,8 +37,8 @@ const EditDeleteMenu = observer(() => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-            <MenuItem onClick={() => courses.openEditDialog()}><RiEdit2Fill /> تعديل</MenuItem>
-            <MenuItem onClick={() => courses.openDeleteDialog()}><MdDelete /> حذف</MenuItem>
+            <MenuItem onClick={() => courses.openEditDialog(id)}><RiEdit2Fill /> تعديل</MenuItem>
+            <MenuItem onClick={() => courses.openDeleteDialog(id)}><MdDelete /> حذف</MenuItem>
             </Menu>
         </div>
     )

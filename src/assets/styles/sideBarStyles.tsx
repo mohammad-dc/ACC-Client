@@ -72,10 +72,10 @@ export const useStyles = makeStyles((theme: Theme) =>
       margin: '10px 0'
     },
     listItemText: {
-      fontFamily: "'Tajawal', sans-serif"
+       fontFamily: "'Tajawal', sans-serif", fontSize: '30px'
     },
     SideBarIcons: {
-      margin: '0 auto', fontSize: '35px'
+      margin: '0 auto', fontSize: '25px'
     },
     NavLink: {
       textDecoration: 'none',

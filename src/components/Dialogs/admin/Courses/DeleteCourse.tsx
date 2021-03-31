@@ -1,5 +1,5 @@
 import React from 'react'
-import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Typography } from "@material-ui/core";
+import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Typography, CircularProgress } from "@material-ui/core";
 import { TransitionDialog } from '../../../transitionDialog';
 import {coursesContext} from "../../../../store/store";
 
@@ -10,6 +10,11 @@ const DeleteCourse = () => {
         courses.closeDeleteDialog()
     };
     
+    const deleteCourse = async () => {
+        await courses.deleteAdminCourse();
+        handleClose();
+    }
+
     return (
         <Dialog
         open={courses.isDeleteDialogOpen}
@@ -26,11 +31,13 @@ const DeleteCourse = () => {
              </form>
           </DialogContent>
           <DialogActions>
-            <Button color="primary" onClick={() => courses.closeDeleteDialog()}>
+            <Button color="primary" onClick={handleClose}>
                 الغاء
             </Button>
-            <Button color="primary">
-                حذف
+            <Button color="primary" onClick={deleteCourse}>
+                {
+                    courses.isLoading? <CircularProgress size={20}/> : 'حذف'
+                }
             </Button>
           </DialogActions>
       </Dialog>

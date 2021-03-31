@@ -6,7 +6,13 @@ import { StylesProvider, jssPreset } from '@material-ui/core/styles';
 import ProtectedRoute from "./routes/ProtectedRoute";
 import './App.css';
 // store context
-import {clubMembersContext, newsContext, educationalStaffContext} from "./store/store";
+import {
+  clubMembersContext,
+  newsContext,
+  educationalStaffContext,
+  outstandingStudentsContext,
+  studentsHelpclubContext
+ } from "./store/store";
 
 // Admin pages
 import DashboardNews from "./pages/admin/DashboardNews";
@@ -35,11 +41,15 @@ const App = () =>{
   const clubMembers = React.useContext(clubMembersContext);
   const news = React.useContext(newsContext);
   const educationalStaff = React.useContext(educationalStaffContext);
+  const outstandingStudents = React.useContext(outstandingStudentsContext);
+  const studentsHelpclub = React.useContext(studentsHelpclubContext);
 
   clubMembers.getClubMembers();
   news.getNews();
   educationalStaff.getEducationalStaff();
-
+  outstandingStudents.getOutstandingStudent();
+  studentsHelpclub.getStudentHelpClub();
+  
   return (
     <StylesProvider  jss={jss}>
       <div className="App">

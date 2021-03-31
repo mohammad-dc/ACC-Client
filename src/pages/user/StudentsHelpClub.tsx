@@ -1,22 +1,49 @@
 import React from 'react'
 import UserLayout from "../../layouts/user/userLayout";
 import {Box, Typography, Grid} from "@material-ui/core";
+import {IStudent} from "../../interfaces/student";
+import NoData from "../../components/NoData/NoData";
 import Footer from "../../components/Footer/Footer";
 import StudentsCard from "../../components/user/studentsCard";
+import {observer} from "mobx-react-lite";
+import {studentsHelpclubContext} from "../../store/store";
+import {useStyles} from "../../assets/styles/admin/pagesStanderdStyle";
 
-const StudentsHelpClub = () => {
+const StudentsHelpClub = observer(() => {
+    const classes = useStyles();
+    const studentsHelpclub = React.useContext(studentsHelpclubContext);
+
     return (
         <UserLayout>
-            <Box style={{padding: '50px'}}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md={6} lg={3}>
-                        <StudentsCard ID={1} first_name="محمد" last_name="احمد" description="لا يوجد شيء للان" image="https://topmeaning.com/english/images/img/EN/g/guy.jpg" />
-                    </Grid>
-                </Grid>
-            </Box>
+            <div style={{padding: '10px 20px'}}>
+                <Box className={classes.membersBox}>    
+                <Typography variant="h3">الطلاب المساعدين للنادي</Typography>            
+                    {
+                        studentsHelpclub.studentHelpClubClient.length === 0
+                        ? <NoData />
+                        :  
+                        <Box className={classes.membersBox}>
+                            {
+                                studentsHelpclub.studentHelpClubClient.length === 0
+                                ? <NoData />
+                                :
+                                <Grid container spacing={2}>
+                                    {
+                                        studentsHelpclub.studentHelpClubClient.map((item: IStudent, index: number) => (
+                                            <Grid item xs={12} md={6} lg={3} xl={3} key={index}>
+                                                <StudentsCard first_name={item.first_name} last_name={item.last_name} description={item.description} image={item.image} id={item.id}/>
+                                            </Grid>
+                                        ))
+                                    }
+                                </Grid>
+                            }
+                        </Box>
+                    }
+                </Box>
+            </div>      
             <Footer />
         </UserLayout>
     )
-}
+})
 
 export default StudentsHelpClub

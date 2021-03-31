@@ -1,6 +1,8 @@
 import React from 'react'
 import AdminLayout from "../../layouts/admin/adminLayout";
-import {Box, Typography, Fab, Grid, Tabs, Tab   } from "@material-ui/core";
+import {Box, Typography, Fab, Grid, Tabs, Tab, CircularProgress, Snackbar} from "@material-ui/core";
+import Alert from "../../components/Alert";
+import {ICourse} from "../../interfaces/course"
 import {useTheme} from "@material-ui/core/styles";
 import {RiAddFill} from "react-icons/ri";
 import TabPanel from "../../components/TabPanel";
@@ -19,9 +21,18 @@ const DashboardCuorses = observer(() => {
     const classes = useStyles();
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
+    const [open, setOpen] = React.useState(false);
+    const [success, setSuccess] = React.useState(false);
 
     const courses = React.useContext(coursesContext);
+    console.log(courses.courses)
+    let reqiuredCourses = [];
+    let optinalCourses = [];
 
+    reqiuredCourses = courses.courses.filter (el => el.type === 'اجباري');
+    optinalCourses = courses.courses.filter (el => el.type === 'اختياري');
+
+    console.log(reqiuredCourses);
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);
     };
@@ -29,6 +40,21 @@ const DashboardCuorses = observer(() => {
     const handleChangeIndex = (index: number) => {
         setValue(index);
     };
+
+    const handleCloseAlert = (event?: React.SyntheticEvent, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+  
+        setOpen(false);
+        setSuccess(false);
+    };
+
+    React.useEffect(() => {
+        courses.getAdminCourses();
+        setSuccess(courses.response.success);
+        setOpen(true);
+    }, [courses.response]);
 
     return (
         <AdminLayout>
@@ -57,24 +83,51 @@ const DashboardCuorses = observer(() => {
                         onChangeIndex={handleChangeIndex}
                     >
                         <TabPanel value={value} index={0} dir='rtl'>
-                            <Grid container spacing={2} >
-                                <Grid item xs={12} md={6} lg={4} >
-                                        <CourseCard />
-                                </Grid>
-                                <Grid item xs={12} md={6} lg={4} >
-                                        <CourseCard />
-                                </Grid>
-                                <Grid item xs={12} md={6} lg={4} >
-                                        <CourseCard />
-                                </Grid>
-                                <Grid item xs={12} md={6} lg={4} >
-                                        <CourseCard />
-                                </Grid>
-                                
-                            </Grid>
+                            {
+                                courses.isLoading
+                                ? <CircularProgress />
+                                :
+                                <Box>
+                                    {
+                                        reqiuredCourses.length === 0
+                                        ? <NoData />
+                                        :
+                                        <Grid container spacing={2} >
+                                            {
+                                                reqiuredCourses.map((item: ICourse) =>(
+                                                    <Grid item xs={12} md={6} lg={4} key={item.id}>
+                                                        <CourseCard courseData={item}/>
+                                                    </Grid>
+                                                ))
+                                            }
+                                        </Grid>
+                                    }
+                                </Box>
+                            }
+                            
                         </TabPanel>
                         <TabPanel value={value} index={1} dir='rtl'>
-                            <NoData />
+                            {
+                                courses.isLoading
+                                ? <CircularProgress />
+                                :
+                                <Box>
+                                    {
+                                        optinalCourses.length === 0
+                                        ? <NoData />
+                                        :
+                                        <Grid container spacing={2} >
+                                            {
+                                                optinalCourses.map((item: ICourse) =>(
+                                                    <Grid item xs={12} md={6} lg={4} key={item.id}>
+                                                        <CourseCard courseData={item}/>
+                                                    </Grid>
+                                                ))
+                                            }
+                                        </Grid>
+                                    }
+                                </Box>
+                            }
                         </TabPanel>
                     </SwipeableViews>
                 </Box>
@@ -87,6 +140,16 @@ const DashboardCuorses = observer(() => {
                 }
                  {
                     courses.isDeleteDialogOpen? <DeleteCourse />: ""
+                }
+
+                {
+                    success
+                    ?
+                    <Snackbar open={open} autoHideDuration={3000} onClose={handleCloseAlert}>
+                        <Alert onClose={handleCloseAlert} severity={courses.response.success? 'success' : 'error'}>
+                            {courses.response.message}
+                        </Alert>
+                    </Snackbar> : ''
                 }
            </div>
         </AdminLayout>
