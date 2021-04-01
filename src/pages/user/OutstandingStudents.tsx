@@ -1,6 +1,7 @@
 import React from 'react'
 import UserLayout from "../../layouts/user/userLayout";
 import {Box, Typography, Grid} from "@material-ui/core";
+import ViewDialog from "../../components/Dialogs/admin/outstandingStudents/ViewDialog";
 import NoData from "../../components/NoData/NoData";
 import Footer from "../../components/Footer/Footer";
 import StudentsCard from "../../components/user/studentsCard";
@@ -40,7 +41,10 @@ const OutstandingStudents = observer(() => {
                         </Box>
                     }
                 </Box>
-            </div>       
+            </div>    
+            {
+                outstandingStudents.isViewDialogOpen? <ViewDialog />: ""
+            }   
             <Footer />   
         </UserLayout>
     )

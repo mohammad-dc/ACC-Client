@@ -7,6 +7,7 @@ export class StudentHelpClubStore {
     isAddDialogOpen: boolean = false;
     isEditDialogOpen: boolean = false;
     isDeleteDialogOpen: boolean = false;
+    isViewDialogOpen: boolean = false;
 
     studentHelpClubSelected: number = 0;
     studentHelpClub: IStudent[] = [];
@@ -42,6 +43,15 @@ export class StudentHelpClubStore {
 
     closeDeleteDialog = () =>{
         this.isDeleteDialogOpen = false;
+    }
+
+    openViewDialog = (ID: number) =>{
+        this.isViewDialogOpen = true;
+        this.studentHelpClubSelected = ID;
+    }
+
+    closeViewDialog = () =>{
+        this.isViewDialogOpen = false;
     }
 
     // admin

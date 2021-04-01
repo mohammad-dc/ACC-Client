@@ -45,7 +45,7 @@ const NewsCard: React.FC<INew> = observer(({id, title, description, image, date_
             </CardContent>
         </CardActionArea>
         <CardActions>
-            <Button size="small" color="primary">
+            <Button size="small" color="primary" onClick={() => news.openViewDialog(id)}>
            اقرأ المزيد
             </Button>
         </CardActions>

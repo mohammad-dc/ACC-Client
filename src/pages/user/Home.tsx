@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 import Logo from "../../assets/images/accLogo.png";
 import ClubMemberCard from "../../components/user/ClubMemberCard";
 import {Box, Typography, Grid} from "@material-ui/core";
+import ViewDialog from "../../components/Dialogs/admin/news/ViewDialog";
 import SliderShow from "../../components/SliderShow";
 import NewsCard from "../../components/user/newCard";
 import Footer from "../../components/Footer/Footer";
@@ -19,12 +20,21 @@ const Home = observer(() => {
     const classes = useStyles();
     const clubMembers = React.useContext(clubMembersContext);
     const news = React.useContext(newsContext);
-
     let newsList = [
         news.newsClient[news.newsClient.length - 1],
         news.newsClient[news.newsClient.length - 2],
         news.newsClient[news.newsClient.length - 3]
     ];
+
+    if(news.newsClient.length <= 3){
+        newsList = news.newsClient;
+    } else {
+        newsList = [
+            news.newsClient[news.newsClient.length - 1],
+            news.newsClient[news.newsClient.length - 2],
+            news.newsClient[news.newsClient.length - 3]
+        ]
+    }
 
     return (
         <UserTheme>
@@ -40,7 +50,7 @@ const Home = observer(() => {
 
                         <Grid container spacing={2}  className={classes.newsCardsContainer}>
                             {
-                                news.newsClient.map((item: INew) => (
+                                newsList.map((item: INew) => (
                                     <Grid item xs={12} md={6} lg={4} key={item.id}>
                                         <NewsCard id={item.id} title={item.title} description={item.description} image={`http://localhost:4000/uploads/${item.image?.trim()}`} date_time={item.date_time} />
                                     </Grid>
@@ -67,6 +77,9 @@ const Home = observer(() => {
                     <div style={{height: '300px'}}></div>
                     <Footer />
                 </div>
+                {
+                    news.isViewDialogOpen? <ViewDialog />: ""
+                }
             </UserLayout>
         </UserTheme>
     )

@@ -7,6 +7,7 @@ export class OutstandingStudentStore {
     isAddDialogOpen: boolean = false;
     isEditDialogOpen: boolean = false;
     isDeleteDialogOpen: boolean = false;
+    isViewDialogOpen: boolean = false;
 
     outstandingStudentSelected: number = 0;
     outstandingStudents: IOutstandinStudents[] = [];
@@ -42,6 +43,15 @@ export class OutstandingStudentStore {
 
     closeDeleteDialog = () =>{
         this.isDeleteDialogOpen = false;
+    }
+
+    openViewDialog = (ID: number) =>{
+        this.isViewDialogOpen = true;
+        this.outstandingStudentSelected = ID;
+    }
+
+    closeViewDialog = () =>{
+        this.isViewDialogOpen = false;
     }
 
     // admin

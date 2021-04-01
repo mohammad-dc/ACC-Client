@@ -7,6 +7,7 @@ export class NewsStore {
     isAddDialogOpen: boolean = false;
     isEditDialogOpen: boolean = false;
     isDeleteDialogOpen: boolean = false;
+    isViewDialogOpen: boolean = false;
 
     newsSelected: number = 0;
     news: INew[] = [];
@@ -42,6 +43,15 @@ export class NewsStore {
 
     closeDeleteDialog = () =>{
         this.isDeleteDialogOpen = false;
+    }
+
+    openViewDialog = (ID: number) =>{
+        this.isViewDialogOpen = true;
+        this.newsSelected = ID;
+    }
+
+    closeViewDialog = () =>{
+        this.isViewDialogOpen = false;
     }
 
     // admin

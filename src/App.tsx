@@ -30,6 +30,7 @@ import Courses from "./pages/user/Courses";
 import EducationalStaff from "./pages/user/EducationalStaff";
 import OutstandingStudents from "./pages/user/OutstandingStudents";
 import StudentsHelpClub from "./pages/user/StudentsHelpClub";
+import MoreNews from "./pages/user/MoreNews";
 
 // not Found Page
 import NotFound from "./pages/NotFound";
@@ -69,6 +70,7 @@ const App = () =>{
             <Route exact path="/educational_staff" component={EducationalStaff} />
             <Route exact path="/outstanding_students" component={OutstandingStudents} />
             <Route exact path="/students_helper" component={StudentsHelpClub} />
+            <Route exact path="/more_news" component={MoreNews} />
             <Route exact path="*" component={NotFound} />
           </Switch>
         </Router>
