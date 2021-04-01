@@ -98,6 +98,18 @@ export class CourseStore {
     }
 
     //video
+    createAdminVideo = (values: {}) => {
+        this.isLoading = true;
+        API.POST(`admin/videos/create`, values)
+            .then(res => {
+                this.isLoading = false;
+                this.response = res.data;
+            })
+            .catch(error =>{
+                this.isLoading = false;
+                this.response = error.response.data;
+            });
+    }
     updateAdminVideo = (ID:number, values: {}) => {
         this.isLoading = true;
         API.PUT(`admin/videos/update/${ID}`, values)

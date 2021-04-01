@@ -29,6 +29,7 @@ const EditCourse: React.FC = observer(() => {
         exams: `${courseItem?.exams ? courseItem?.exams : ''}`,
         summaries: `${courseItem?.summaries ? courseItem?.summaries : ''}`,
         course: `${courseItem?.course ? courseItem?.course : ''}`,
+        video_url: '',
         videos: courseItem?.videos? courseItem?.videos : [],
     }
         input_ref.current = initialValues.videos.map(
@@ -90,7 +91,9 @@ const EditCourse: React.FC = observer(() => {
                                             </Tooltip>
 
                                             <Tooltip title="حفظ التعديل">
-                                                <IconButton onClick={() => console.log(input_ref.current[index].current.children[1].children[0].value)}>
+                                                <IconButton onClick={() => {
+                                                    let value = {url: input_ref.current[index].current.children[1].children[0].value};
+                                                    courses.updateAdminVideo(item.id, value)}}>
                                                     <FiCheck />
                                                 </IconButton>
                                             </Tooltip>
@@ -103,7 +106,13 @@ const EditCourse: React.FC = observer(() => {
                             <Box style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
 
                                 <Tooltip title="اضافة">
-                                    <IconButton>
+                                    <IconButton onClick={() => {
+                                        let value = {
+                                            course_id: initialValues.videos[0].course_id,
+                                            url: props.values.video_url
+                                        }
+                                        courses.createAdminVideo(value);
+                                    }}>
                                         <FiCheck />
                                     </IconButton>
                                 </Tooltip>
