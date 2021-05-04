@@ -55,7 +55,9 @@ const EditCourse: React.FC = observer(() => {
               validationSchema={CourseSchema}
               onSubmit={async (values, {setSubmitting}) => {
                 setSubmitting(true); 
-                console.log(values)
+                const { 'video_url': _, 'videos': __, ...rest} = values;
+                await courses.updateAdminCourse(rest);
+                handleClose();
                 }}
               >
                 {(props) =>(
