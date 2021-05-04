@@ -1,23 +1,24 @@
 import React from 'react'
 import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Typography, CircularProgress } from "@material-ui/core";
 import { TransitionDialog } from '../../../transitionDialog';
-import {coursesContext} from "../../../../store/store";
+import {coursesContext, coursesDialogsContext} from "../../../../store/store";
 
 const DeleteCourse = () => {
     const courses = React.useContext(coursesContext);
-    
+    const coursesDialogs = React.useContext(coursesDialogsContext)
     const handleClose = () => {
-        courses.closeDeleteDialog()
+        coursesDialogs.closeDeleteDialog()
     };
     
     const deleteCourse = async () => {
         await courses.deleteAdminCourse();
+        coursesDialogs.isOpen = true;
         handleClose();
     }
 
     return (
         <Dialog
-        open={courses.isDeleteDialogOpen}
+        open={coursesDialogs.isDeleteDialogOpen}
         TransitionComponent={TransitionDialog}
         keepMounted
         onClose={handleClose}

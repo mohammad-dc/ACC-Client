@@ -5,11 +5,12 @@ import {Formik, Form} from "formik";
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import CustomField from "../../../CustomeField";
 import {OutstandingStudentsSchema} from "../../../../validations/outstandingStudents";
-import {outstandingStudentsContext} from "../../../../store/store";
+import {outstandingStudentsContext, outstandingStudentsDialogsContext} from "../../../../store/store";
 import {observer} from "mobx-react-lite";
 
 const EditDialog = observer(() => {
     const outstandingStudents = React.useContext(outstandingStudentsContext);
+    const outstandingStudentsDialogs = React.useContext(outstandingStudentsDialogsContext);
     const [image, setImage] = React.useState('');
     const outstandingStudentItem = outstandingStudents.outstandingStudents.find(item => item.id === outstandingStudents.outstandingStudentSelected);
 
@@ -21,12 +22,12 @@ const EditDialog = observer(() => {
     }
 
     const handleClose = () => {
-        outstandingStudents.closeEditDialog()
+        outstandingStudentsDialogs.closeEditDialog()
     };
 
     return (
         <Dialog
-        open={outstandingStudents.isEditDialogOpen}
+        open={outstandingStudentsDialogs.isEditDialogOpen}
         TransitionComponent={TransitionDialog}
         keepMounted
         onClose={handleClose}
@@ -45,6 +46,7 @@ const EditDialog = observer(() => {
                 data.append('last_name', values.last_name);
                 data.append('description', values.description);
                 await outstandingStudents.updateAdminOutstandingStudent(data);
+                outstandingStudentsDialogs.isOpen = true;
                 handleClose();
                 }}
             >

@@ -8,11 +8,12 @@ import DrpoDownProps from "../../../DropDownList";
 import {Formik, Form} from "formik";
 import CustomField from "../../../CustomeField";
 import {CourseSchema} from "../../../../validations/courses";
-import {coursesContext} from "../../../../store/store";
+import {coursesContext, coursesDialogsContext} from "../../../../store/store";
 import {observer} from "mobx-react-lite";
 
 const AddCourse = observer(() => {
     const courses = React.useContext(coursesContext);
+    const coursesDialogs = React.useContext(coursesDialogsContext);
     const [videosList, setVideosList] = React.useState<string[]>([]);
 
     let typeList = [
@@ -32,12 +33,12 @@ const AddCourse = observer(() => {
     }
 
     const handleClose = () => {
-        courses.closeAddDialog()
+        coursesDialogs.closeAddDialog()
     };
 
     return (
          <Dialog
-        open={courses.isAddDialogOpen}
+        open={coursesDialogs.isAddDialogOpen}
         TransitionComponent={TransitionDialog}
         keepMounted
         onClose={handleClose}
@@ -56,6 +57,7 @@ const AddCourse = observer(() => {
                 const { 'video_url': _, ...rest} = values;
                 console.log(rest)
                 await courses.createAdminCourse(rest);
+                coursesDialogs.isOpen = true;
                 handleClose();
                 }}
               >

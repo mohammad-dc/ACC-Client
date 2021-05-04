@@ -11,7 +11,8 @@ import {
   newsContext,
   educationalStaffContext,
   outstandingStudentsContext,
-  studentsHelpclubContext
+  studentsHelpclubContext,
+  coursesContext
  } from "./store/store";
 
 // Admin pages
@@ -44,12 +45,14 @@ const App = () =>{
   const educationalStaff = React.useContext(educationalStaffContext);
   const outstandingStudents = React.useContext(outstandingStudentsContext);
   const studentsHelpclub = React.useContext(studentsHelpclubContext);
+  const courses = React.useContext(coursesContext);
 
   clubMembers.getClubMembers();
   news.getNews();
   educationalStaff.getEducationalStaff();
   outstandingStudents.getOutstandingStudent();
   studentsHelpclub.getStudentHelpClub();
+  courses.getCourses();
   
   return (
     <StylesProvider  jss={jss}>

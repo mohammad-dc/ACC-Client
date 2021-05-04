@@ -11,7 +11,7 @@ import Footer from "../../components/Footer/Footer";
 import {IClubMember} from "../../interfaces/clubMember";
 import {observer} from "mobx-react-lite";
 import { clubMembersContext } from "../../store/store";
-import { newsContext } from "../../store/store";
+import { newsContext, newsDialogsContext } from "../../store/store";
 import {useStyles} from "../../assets/styles/user/HomeStyles";
 import { INew } from '../../interfaces/news';
 import UserTheme from "../../constants/userTheme";
@@ -20,19 +20,21 @@ const Home = observer(() => {
     const classes = useStyles();
     const clubMembers = React.useContext(clubMembersContext);
     const news = React.useContext(newsContext);
+    const newsDialogs = React.useContext(newsDialogsContext);
+
     let newsList = [
-        news.newsClient[news.newsClient.length - 1],
-        news.newsClient[news.newsClient.length - 2],
-        news.newsClient[news.newsClient.length - 3]
+        news.news[news.news.length - 1],
+        news.news[news.news.length - 2],
+        news.news[news.news.length - 3]
     ];
 
-    if(news.newsClient.length <= 3){
-        newsList = news.newsClient;
+    if(news.news.length <= 3){
+        newsList = news.news;
     } else {
         newsList = [
-            news.newsClient[news.newsClient.length - 1],
-            news.newsClient[news.newsClient.length - 2],
-            news.newsClient[news.newsClient.length - 3]
+            news.news[news.news.length - 1],
+            news.news[news.news.length - 2],
+            news.news[news.news.length - 3]
         ]
     }
 
@@ -78,7 +80,7 @@ const Home = observer(() => {
                     <Footer />
                 </div>
                 {
-                    news.isViewDialogOpen? <ViewDialog />: ""
+                    newsDialogs.isViewDialogOpen? <ViewDialog />: ""
                 }
             </UserLayout>
         </UserTheme>

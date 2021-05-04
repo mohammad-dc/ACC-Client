@@ -1,20 +1,21 @@
 import React from 'react'
 import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Typography } from "@material-ui/core";
-import {studentsHelpclubContext} from "../../../../store/store";
+import {studentsHelpclubContext, studentsHelpclubDialogsContext} from "../../../../store/store";
 import { TransitionDialog } from '../../../transitionDialog';
 import {observer} from "mobx-react-lite";
 
 const ViewDialog = observer(() => {
     const studentsHelpClub = React.useContext(studentsHelpclubContext);
-    let item = studentsHelpClub.studentHelpClubClient.find(el => el.id === studentsHelpClub.studentHelpClubSelected);
+    const studentsHelpClubDialogs = React.useContext(studentsHelpclubDialogsContext);
+    let item = studentsHelpClub.studentHelpClub.find(el => el.id === studentsHelpClub.studentHelpClubSelected);
 
     const handleClose = () => {
-        studentsHelpClub.closeViewDialog()
+        studentsHelpClubDialogs.closeViewDialog()
     };
 
     return (
         <Dialog
-        open={studentsHelpClub.isViewDialogOpen}
+        open={studentsHelpClubDialogs.isViewDialogOpen}
         TransitionComponent={TransitionDialog}
         keepMounted
         onClose={handleClose}

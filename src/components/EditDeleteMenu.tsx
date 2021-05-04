@@ -3,7 +3,7 @@ import {Menu, MenuItem, IconButton, Tooltip} from "@material-ui/core";
 import {FiMoreVertical} from "react-icons/fi";
 import {MdDelete} from "react-icons/md";
 import {RiEdit2Fill} from "react-icons/ri";
-import {coursesContext} from "../store/store";
+import {coursesContext, coursesDialogsContext} from "../store/store";
 import {observer} from "mobx-react-lite";
 
 interface IdProps{
@@ -13,7 +13,8 @@ interface IdProps{
 const EditDeleteMenu: React.FC<IdProps> = observer(({id}: IdProps) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const courses = React.useContext(coursesContext);
-
+    const coursesDialogs = React.useContext(coursesDialogsContext);
+    courses.courseSelected = id;
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -37,8 +38,8 @@ const EditDeleteMenu: React.FC<IdProps> = observer(({id}: IdProps) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-            <MenuItem onClick={() => courses.openEditDialog(id)}><RiEdit2Fill /> تعديل</MenuItem>
-            <MenuItem onClick={() => courses.openDeleteDialog(id)}><MdDelete /> حذف</MenuItem>
+            <MenuItem onClick={() => coursesDialogs.openEditDialog()}><RiEdit2Fill /> تعديل</MenuItem>
+            <MenuItem onClick={() => coursesDialogs.openDeleteDialog()}><MdDelete /> حذف</MenuItem>
             </Menu>
         </div>
     )

@@ -1,24 +1,26 @@
 import React from 'react'
 import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Typography, CircularProgress } from "@material-ui/core";
-import {newsContext} from "../../../../store/store";
+import {newsContext, newsDialogsContext} from "../../../../store/store";
 import { TransitionDialog } from '../../../transitionDialog';
 import {observer} from "mobx-react-lite";
 
 const DeleteDialog = observer(() => {
     const news = React.useContext(newsContext);
+    const newsDialogs = React.useContext(newsDialogsContext);
 
     const handleClose = () => {
-        news.closeDeleteDialog()
+        newsDialogs.closeDeleteDialog()
     };
 
     const deleteNews = async() => {
         await news.deleteAdminNew();
+        newsDialogs.isOpen = true
         handleClose();
     }
 
     return (
         <Dialog
-        open={news.isDeleteDialogOpen}
+        open={newsDialogs.isDeleteDialogOpen}
         TransitionComponent={TransitionDialog}
         keepMounted
         onClose={handleClose}

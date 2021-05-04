@@ -5,7 +5,7 @@ import {Formik, Form} from "formik";
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import CustomField from "../../../CustomeField";
 import {StudentsHelpClubSchema} from "../../../../validations/studentsHelpClub";
-import {studentsHelpclubContext} from "../../../../store/store";
+import {studentsHelpclubContext, studentsHelpclubDialogsContext} from "../../../../store/store";
 import {observer} from "mobx-react-lite";
 
 
@@ -18,15 +18,16 @@ let initialValues = {
 
 const AddDialog = observer(() => {
     const studentsHelpClub = React.useContext(studentsHelpclubContext);
+    const studentsHelpClubDialogs = React.useContext(studentsHelpclubDialogsContext);
     const [image, setImage] = React.useState('');
 
     const handleClose = () => {
-        studentsHelpClub.closeAddDialog()
+        studentsHelpClubDialogs.closeAddDialog()
     };
 
     return (
         <Dialog
-        open={studentsHelpClub.isAddDialogOpen}
+        open={studentsHelpClubDialogs.isAddDialogOpen}
         TransitionComponent={TransitionDialog}
         keepMounted
         onClose={handleClose}
@@ -45,11 +46,11 @@ const AddDialog = observer(() => {
                 data.append('last_name', values.last_name);
                 data.append('description', values.description);
                 await studentsHelpClub.createAdminStudentHelpClub(data);
+                studentsHelpClubDialogs.isOpen = true;
                 handleClose();
                 }}
             >
                 {(formProps) =>(
-                      
                     <Form>
                         <DialogContent>
                             <Box style={{position: 'relative', width: 'fit-content', margin: '0 auto'}}>

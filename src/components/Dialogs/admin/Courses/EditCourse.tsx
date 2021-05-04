@@ -8,11 +8,12 @@ import CustomField from "../../../CustomeField";
 import {CourseSchema} from "../../../../validations/courses";
 import {MdDelete} from "react-icons/md";
 import {FiCheck} from "react-icons/fi";
-import {coursesContext} from "../../../../store/store";
+import {coursesContext, coursesDialogsContext} from "../../../../store/store";
 import {observer} from "mobx-react-lite";
 
 const EditCourse: React.FC = observer(() => {
     const courses = React.useContext(coursesContext);
+    const coursesDialogs = React.useContext(coursesDialogsContext);
     const courseItem = courses.courses.find(item => item.id === courses.courseSelected);
     let input_ref = React.useRef<any>([]);
     input_ref.current = [];
@@ -37,11 +38,11 @@ const EditCourse: React.FC = observer(() => {
         );
     
     const handleClose = () => {
-        courses.closeEditDialog()
+        coursesDialogs.closeEditDialog()
     };
     return (
         <Dialog
-        open={courses.isEditDialogOpen}
+        open={coursesDialogs.isEditDialogOpen}
         TransitionComponent={TransitionDialog}
         keepMounted
         onClose={handleClose}
@@ -57,6 +58,7 @@ const EditCourse: React.FC = observer(() => {
                 setSubmitting(true); 
                 const { 'video_url': _, 'videos': __, ...rest} = values;
                 await courses.updateAdminCourse(rest);
+                coursesDialogs.isOpen = true;
                 handleClose();
                 }}
               >

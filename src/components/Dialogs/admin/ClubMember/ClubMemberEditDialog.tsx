@@ -6,11 +6,12 @@ import {Formik, Form} from "formik";
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import CustomField from "../../../CustomeField";
 import {ClubMemberSchema} from "../../../../validations/clubMembers";
-import {clubMembersContext} from "../../../../store/store";
+import {clubMembersContext, clubMembersDialogsContext} from "../../../../store/store";
 import {observer} from "mobx-react-lite";
 
 const ClubMemberEditDialog: React.FC = observer(() => {
     const clubMembers = React.useContext(clubMembersContext);
+    const clubMembersDialogs = React.useContext(clubMembersDialogsContext);
     const [image, setImage] = React.useState('');
     const clubMemberItem = clubMembers.clubMember.find(item => item.id === clubMembers.clubMemberSelected);
 
@@ -28,12 +29,12 @@ const ClubMemberEditDialog: React.FC = observer(() => {
     }
 
     const handleClose = () => {
-        clubMembers.closeEditDialog()
+        clubMembersDialogs.closeEditDialog()
     };
 
     return (
         <Dialog
-        open={clubMembers.isEditDialogOpen}
+        open={clubMembersDialogs.isEditDialogOpen}
         TransitionComponent={TransitionDialog}
         keepMounted
         onClose={handleClose}
@@ -52,6 +53,7 @@ const ClubMemberEditDialog: React.FC = observer(() => {
                 data.append('last_name', values.last_name);
                 data.append('rank', values.rank);
                 await clubMembers.updateAdminClubMember(data);
+                clubMembersDialogs.isOpen = true;
                 handleClose();
                 }}
               >

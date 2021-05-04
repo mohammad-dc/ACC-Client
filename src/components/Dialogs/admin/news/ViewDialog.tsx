@@ -1,20 +1,21 @@
 import React from 'react'
 import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Typography } from "@material-ui/core";
-import {newsContext} from "../../../../store/store";
+import {newsContext, newsDialogsContext} from "../../../../store/store";
 import { TransitionDialog } from '../../../transitionDialog';
 import {observer} from "mobx-react-lite";
 
 const ViewDialog = observer(() => {
     const news = React.useContext(newsContext);
-    let item = news.newsClient.find(el => el.id === news.newsSelected);
+    const newsDialogs = React.useContext(newsDialogsContext);
+    let item = news.news.find(el => el.id === news.newsSelected);
 
     const handleClose = () => {
-        news.closeViewDialog()
+        newsDialogs.closeViewDialog()
     };
 
     return (
         <Dialog
-        open={news.isViewDialogOpen}
+        open={newsDialogs.isViewDialogOpen}
         TransitionComponent={TransitionDialog}
         keepMounted
         onClose={handleClose}

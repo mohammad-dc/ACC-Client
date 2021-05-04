@@ -5,12 +5,13 @@ import {Formik, Form} from "formik";
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import CustomField from "../../../CustomeField";
 import {NewsSchema} from "../../../../validations/news";
-import {newsContext} from "../../../../store/store";
+import {newsContext, newsDialogsContext} from "../../../../store/store";
 import {observer} from "mobx-react-lite";
 
 
 const EditDialog = observer(() => {
     const news = React.useContext(newsContext);
+    const newsDialogs = React.useContext(newsDialogsContext);
     const [image, setImage] = React.useState('');
     const newsItem = news.news.find(item => item.id === news.newsSelected);
 
@@ -22,12 +23,12 @@ const EditDialog = observer(() => {
     }
 
     const handleClose = () => {
-        news.closeEditDialog()
+        newsDialogs.closeEditDialog()
     };
 
     return (
         <Dialog
-        open={news.isEditDialogOpen}
+        open={newsDialogs.isEditDialogOpen}
         TransitionComponent={TransitionDialog}
         keepMounted
         onClose={handleClose}
@@ -45,11 +46,11 @@ const EditDialog = observer(() => {
                 data.append('title', values.title);
                 data.append('description', values.description);
                 await news.updateAdminNews(data);
+                newsDialogs.isOpen = true;
                 handleClose();
                 }}
             >
                 {(formProps) =>(
-                      
                     <Form>
                         <DialogContent>
                             <Box>

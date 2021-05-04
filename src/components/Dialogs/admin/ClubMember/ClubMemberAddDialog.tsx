@@ -6,7 +6,7 @@ import {Formik, Form} from "formik";
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import CustomField from "../../../CustomeField";
 import {ClubMemberSchema} from "../../../../validations/clubMembers";
-import {clubMembersContext} from "../../../../store/store";
+import {clubMembersContext, clubMembersDialogsContext} from "../../../../store/store";
 import {observer} from "mobx-react-lite";
 
 let rankList = [
@@ -24,14 +24,15 @@ let initialValues = {
 
 const ClubMemberAddDialog = observer(() => {
     const clubMembers = React.useContext(clubMembersContext);
+    const clubMembersDialogs = React.useContext(clubMembersDialogsContext);
     const [image, setImage] = React.useState('');
 
     const handleClose = () => {
-        clubMembers.closeAddDialog()
+        clubMembersDialogs.closeAddDialog()
     };
     return (
         <Dialog
-        open={clubMembers.isAddDialogOpen}
+        open={clubMembersDialogs.isAddDialogOpen}
         TransitionComponent={TransitionDialog}
         keepMounted
         onClose={handleClose}
@@ -50,6 +51,7 @@ const ClubMemberAddDialog = observer(() => {
                 data.append('last_name', values.last_name);
                 data.append('rank', values.rank);
                 await clubMembers.createAdminClubMembers(data);
+                clubMembersDialogs.isOpen = true;
                 handleClose();
                 }}
               >

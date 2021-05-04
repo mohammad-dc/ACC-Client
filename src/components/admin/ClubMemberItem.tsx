@@ -3,13 +3,14 @@ import {Box, Avatar, Typography, IconButton, Tooltip} from "@material-ui/core";
 import {MdDeleteForever} from "react-icons/md";
 import {RiEdit2Fill} from "react-icons/ri";
 import {IClubMember} from "../../interfaces/clubMember";
-import {clubMembersContext} from "../../store/store";
+import {clubMembersContext, clubMembersDialogsContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 import {useStyles} from "../../assets/styles/admin/ClubMemberItemStyles";
 
 const ClubMemberItem: React.FC<IClubMember> = observer(({first_name, last_name, rank, image, id}: IClubMember) => {
     const classes = useStyles();
     const clubMembers = React.useContext(clubMembersContext);
+    const clubMembersDialogs = React.useContext(clubMembersDialogsContext);
 
     return (
         <div className={classes.root}>
@@ -23,12 +24,18 @@ const ClubMemberItem: React.FC<IClubMember> = observer(({first_name, last_name, 
                 </Box>
                 <Box className={classes.BoxFlexCenter}>
                     <Tooltip title="حذف">
-                        <IconButton onClick={() => clubMembers.openDeleteDialog(id)}>
+                        <IconButton onClick={() => {
+                            clubMembers.clubMemberSelected = id;
+                            clubMembersDialogs.openDeleteDialog();
+                            }}>
                             <MdDeleteForever />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title='تعديل'>
-                        <IconButton onClick={() => clubMembers.openEditDialog(id)}>
+                        <IconButton onClick={() => {
+                            clubMembers.clubMemberSelected = id;
+                            clubMembersDialogs.openEditDialog();
+                            }}>
                             <RiEdit2Fill />
                         </IconButton>
                     </Tooltip>

@@ -3,13 +3,14 @@ import {Box, Avatar, Typography, IconButton, Tooltip} from "@material-ui/core";
 import {MdDeleteForever} from "react-icons/md";
 import {RiEdit2Fill} from "react-icons/ri";
 import {IEducationalStaff} from "../../interfaces/educationalStaff";
-import {educationalStaffContext} from "../../store/store";
+import {educationalStaffContext, educationalStaffDialogsContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 import {useStyles} from "../../assets/styles/admin/ClubMemberItemStyles";
 
 const EducationalStaffItemCard: React.FC<IEducationalStaff> = observer(({first_name, last_name, image, facebook, id}: IEducationalStaff) => {
     const classes = useStyles();
     const educationalStaff = React.useContext(educationalStaffContext);
+    const educationalStaffDialogs = React.useContext(educationalStaffDialogsContext);
 
     return (
         <div className={classes.root}>
@@ -20,12 +21,18 @@ const EducationalStaffItemCard: React.FC<IEducationalStaff> = observer(({first_n
                 </Box>
                 <Box className={classes.BoxFlexCenter}>
                     <Tooltip title="حذف">
-                        <IconButton onClick={() => educationalStaff.openDeleteDialog(id)}>
+                        <IconButton onClick={() => {
+                            educationalStaff.educationalStaffSelected = id;
+                            educationalStaffDialogs.openDeleteDialog()
+                            }}>
                             <MdDeleteForever />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title='تعديل'>
-                        <IconButton onClick={() => educationalStaff.openEditDialog(id)}>
+                        <IconButton onClick={() => {
+                            educationalStaff.educationalStaffSelected = id;
+                            educationalStaffDialogs.openEditDialog();
+                        }}>
                             <RiEdit2Fill />
                         </IconButton>
                     </Tooltip>

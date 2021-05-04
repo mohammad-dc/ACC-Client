@@ -3,13 +3,14 @@ import {Box, Avatar, Typography, IconButton, Tooltip} from "@material-ui/core";
 import {MdDeleteForever} from "react-icons/md";
 import {RiEdit2Fill} from "react-icons/ri";
 import {IOutstandinStudents} from "../../interfaces/outstandingStudents";
-import {outstandingStudentsContext} from "../../store/store";
+import {outstandingStudentsContext, outstandingStudentsDialogsContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 import {useStyles} from "../../assets/styles/admin/ClubMemberItemStyles";
 
 const OutstandingStudentsItemCard: React.FC<IOutstandinStudents> = observer(({id, first_name, last_name, image, description}: IOutstandinStudents) => {
     const classes = useStyles();
     const outstandingStudents = React.useContext(outstandingStudentsContext);
+    const outstandingStudentsDialogs = React.useContext(outstandingStudentsDialogsContext);
 
     return (
         <div className={classes.root}>
@@ -20,12 +21,18 @@ const OutstandingStudentsItemCard: React.FC<IOutstandinStudents> = observer(({id
                 </Box>
                 <Box className={classes.BoxFlexCenter}>
                     <Tooltip title="حذف">
-                        <IconButton onClick={() => outstandingStudents.openDeleteDialog(id)}>
+                        <IconButton onClick={() => {
+                            outstandingStudents.outstandingStudentSelected = id;
+                            outstandingStudentsDialogs.openDeleteDialog()
+                        }}>
                             <MdDeleteForever />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title='تعديل'>
-                        <IconButton onClick={() => outstandingStudents.openEditDialog(id)}>
+                        <IconButton onClick={() => {
+                            outstandingStudents.outstandingStudentSelected = id;
+                            outstandingStudentsDialogs.openEditDialog()
+                            }}>
                             <RiEdit2Fill />
                         </IconButton>
                     </Tooltip>

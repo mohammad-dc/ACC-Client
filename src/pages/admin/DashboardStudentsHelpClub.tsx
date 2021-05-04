@@ -9,46 +9,53 @@ import EditDialog from "../../components/Dialogs/admin/studentsHelpClub/EditDial
 import DeleteDialog from "../../components/Dialogs/admin/studentsHelpClub/DeleteDialog";
 import StudentsHelpClubItemCard from "../../components/admin/studentsHelpClubItemCard";
 import {IStudent} from "../../interfaces/student"
-import {studentsHelpclubContext} from "../../store/store";
+import {studentsHelpclubContext, outstandingStudentsDialogsContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 import {useStyles} from "../../assets/styles/admin/pagesStanderdStyle";
 
 const DashboardStudentsHelpClub = observer(() => {
     const classes = useStyles();
     const studentsHelpClub = React.useContext(studentsHelpclubContext);
-    const [open, setOpen] = React.useState(false);
-    const [success, setSuccess] = React.useState(false);
+    const studentsHelpClubDialogs = React.useContext(outstandingStudentsDialogsContext);
 
     const handleCloseAlert = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
-  
-        setOpen(false);
-        setSuccess(false);
+        studentsHelpClubDialogs.isOpen = false;
     };
 
     React.useEffect(() => {
-        studentsHelpClub.getAdminStudentHelpClub();
-        setSuccess(studentsHelpClub.response.success);
-        setOpen(true);
-    }, [studentsHelpClub.response]);
+        studentsHelpClub.getAdminStudentHelpClub(true);
+    }, []);
 
+    if(studentsHelpClub.isLoading){
+        return (
+            <AdminLayout>
+                <div className={classes.root}>
+                    <Box className={classes.BoxFlex}>
+                        <Typography variant="h3">طلاب النادي المساعدون</Typography>
+                            <Fab aria-label="add" className={classes.floatBtn}>
+                                <RiUserAddLine className={classes.floatBtnIcon}/>
+                            </Fab>
+                    </Box>
+                    <Box className={classes.membersBox}>
+                        <CircularProgress />
+                    </Box>
+                </div>
+            </AdminLayout>
+        )
+    }
 
     return (
         <AdminLayout>
             <div className={classes.root}>
                 <Box className={classes.BoxFlex}>
                     <Typography variant="h3">طلاب النادي المساعدون</Typography>
-                        <Fab aria-label="add" className={classes.floatBtn} onClick={() => studentsHelpClub.openAddDialog()}>
+                        <Fab aria-label="add" className={classes.floatBtn} onClick={() => studentsHelpClubDialogs.openAddDialog()}>
                             <RiUserAddLine className={classes.floatBtnIcon}/>
                         </Fab>
                 </Box>
-
-                {
-                    studentsHelpClub.isLoading
-                    ? <CircularProgress />
-                    : 
                     <Box className={classes.membersBox}>
                         {
                             studentsHelpClub.studentHelpClub.length === 0
@@ -65,26 +72,20 @@ const DashboardStudentsHelpClub = observer(() => {
                             </Grid>
                         }
                     </Box>
-                }
-
                 {
-                    studentsHelpClub.isAddDialogOpen? <AddDialog />: ""
+                    studentsHelpClubDialogs.isAddDialogOpen? <AddDialog />: ""
                 }
                  {
-                    studentsHelpClub.isEditDialogOpen? <EditDialog />: ""
+                    studentsHelpClubDialogs.isEditDialogOpen? <EditDialog />: ""
                 }
                  {
-                    studentsHelpClub.isDeleteDialogOpen? <DeleteDialog />: ""
+                    studentsHelpClubDialogs.isDeleteDialogOpen? <DeleteDialog />: ""
                 }
-                {
-                    success
-                    ?
-                    <Snackbar open={open} autoHideDuration={3000} onClose={handleCloseAlert}>
-                        <Alert onClose={handleCloseAlert} severity={studentsHelpClub.response.success? 'success' : 'error'}>
-                            {studentsHelpClub.response.message}
-                        </Alert>
-                    </Snackbar> : ''
-                }
+                <Snackbar open={studentsHelpClubDialogs.isOpen} autoHideDuration={3000} onClose={handleCloseAlert}>
+                    <Alert onClose={handleCloseAlert} severity={studentsHelpClub.response.success? 'success' : 'error'}>
+                        {studentsHelpClub.response.message}
+                    </Alert>
+                </Snackbar>
             </div>
         </AdminLayout>
     )

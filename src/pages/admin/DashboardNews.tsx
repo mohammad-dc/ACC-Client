@@ -9,85 +9,90 @@ import {INew} from "../../interfaces/news";
 import AddDialog from "../../components/Dialogs/admin/news/AddDialog";
 import EditDialog from "../../components/Dialogs/admin/news/EditDialog";
 import DeleteDialog from "../../components/Dialogs/admin/news/DeleteDialog";
-import {newsContext} from "../../store/store";
+import {newsContext, newsDialogsContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 import {useStyles} from "../../assets/styles/admin/pagesStanderdStyle";
 
 const DashboardNews = observer(() => {
     const classes = useStyles();
     const news = React.useContext(newsContext);
-    const [open, setOpen] = React.useState(false);
-    const [success, setSuccess] = React.useState(false);
+    const newsDialogs = React.useContext(newsDialogsContext);
 
     const handleCloseAlert = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
-  
-        setOpen(false);
-        setSuccess(false);
+
+        newsDialogs.isOpen = false;
     };
 
     React.useEffect(() => {
-        news.getAdminNews();
-        setSuccess(news.response.success);
-        setOpen(true);
-    }, [news.response]);
+        news.getAdminNews(true);
+    }, []);
 
-    return (
-        <AdminLayout>
-            <div className={classes.root}>
-                <Box className={classes.BoxFlex}>
-                    <Typography variant="h3">الاخبار</Typography>
-                        <Fab aria-label="add" className={classes.floatBtn} onClick={() => news.openAddDialog()}>
-                            <CgFileAdd className={classes.floatBtnIcon}/>
-                        </Fab>
-                </Box>
-
-                 {
-                    news.isLoading
-                    ? <CircularProgress />
-                    : 
-                    <Box className={classes.membersBox}>
-                        {
-                            news.news.length === 0
-                            ? <NoData />
-                            :
-                            <Grid container spacing={2}>
-                                {
-                                    news.news.map((item: INew, index: number) => (
-                                        <Grid item xs={12} md={6} lg={3} xl={3} key={index}>
-                                            <NewsItemCard title={item.title} description={item.description} image={`http://localhost:4000/uploads/${item.image?.trim()}`} id={item.id} date_time={item.date_time} />
-                                        </Grid>
-                                    ))
-                                }
-                            </Grid>
-                        }
+    if(news.isLoading){
+        return (
+            <AdminLayout>
+                <div className={classes.root}>
+                    <Box className={classes.BoxFlex}>
+                        <Typography variant="h3">الاخبار</Typography>
+                            <Fab aria-label="add" className={classes.floatBtn} onClick={() => newsDialogs.openAddDialog()}>
+                                <CgFileAdd className={classes.floatBtnIcon}/>
+                            </Fab>
                     </Box>
-                }
-
-                {
-                    news.isAddDialogOpen? <AddDialog />: ""
-                }
-                 {
-                    news.isEditDialogOpen? <EditDialog />: ""
-                }
-                 {
-                    news.isDeleteDialogOpen? <DeleteDialog />: ""
-                }
-                {
-                    success
-                    ?
-                    <Snackbar open={open} autoHideDuration={3000} onClose={handleCloseAlert}>
-                        <Alert onClose={handleCloseAlert} severity={news.response.success? 'success' : 'error'}>
-                            {news.response.message}
-                        </Alert>
-                    </Snackbar> : ''
-                }
-
-            </div>
-        </AdminLayout>
-    )
+                        <Box className={classes.membersBox}>
+                            <CircularProgress />
+                        </Box>
+                        </div>
+                        </AdminLayout>
+        )
+    }
+    else {
+        return (
+            <AdminLayout>
+                <div className={classes.root}>
+                    <Box className={classes.BoxFlex}>
+                        <Typography variant="h3">الاخبار</Typography>
+                            <Fab aria-label="add" className={classes.floatBtn} onClick={() => newsDialogs.openAddDialog()}>
+                                <CgFileAdd className={classes.floatBtnIcon}/>
+                            </Fab>
+                    </Box>
+                        <Box className={classes.membersBox}>
+                            {
+                                news.news.length === 0
+                                ? <NoData />
+                                :
+                                <Grid container spacing={2}>
+                                    {
+                                        news.news.map((item: INew, index: number) => (
+                                            <Grid item xs={12} md={6} lg={3} xl={3} key={index}>
+                                                <NewsItemCard title={item.title} description={item.description} image={`http://localhost:4000/uploads/${item.image?.trim()}`} id={item.id} date_time={item.date_time} />
+                                            </Grid>
+                                        ))
+                                    }
+                                </Grid>
+                            }
+                        </Box>
+    
+                    {
+                        newsDialogs.isAddDialogOpen? <AddDialog />: ""
+                    }
+                     {
+                        newsDialogs.isEditDialogOpen? <EditDialog />: ""
+                    }
+                     {
+                        newsDialogs.isDeleteDialogOpen? <DeleteDialog />: ""
+                    }
+                        <Snackbar open={newsDialogs.isOpen} autoHideDuration={3000} onClose={handleCloseAlert}>
+                            <Alert onClose={handleCloseAlert} severity={news.response.success? 'success' : 'error'}>
+                                {news.response.message}
+                            </Alert>
+                        </Snackbar> 
+    
+                </div>
+            </AdminLayout>
+        )
+    }
 })
 
 export default DashboardNews

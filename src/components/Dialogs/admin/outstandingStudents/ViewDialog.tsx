@@ -1,20 +1,21 @@
 import React from 'react'
 import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Typography } from "@material-ui/core";
-import {outstandingStudentsContext} from "../../../../store/store";
+import {outstandingStudentsContext, outstandingStudentsDialogsContext} from "../../../../store/store";
 import { TransitionDialog } from '../../../transitionDialog';
 import {observer} from "mobx-react-lite";
 
 const ViewDialog = observer(() => {
     const outstandingStudents = React.useContext(outstandingStudentsContext);
-    let item = outstandingStudents.outstandingStudentsClient.find(el => el.id === outstandingStudents.outstandingStudentSelected);
+    const outstandingStudentsDialogs = React.useContext(outstandingStudentsDialogsContext);
+    let item = outstandingStudents.outstandingStudents.find(el => el.id === outstandingStudents.outstandingStudentSelected);
 
     const handleClose = () => {
-        outstandingStudents.closeViewDialog()
+        outstandingStudentsDialogs.closeViewDialog()
     };
 
     return (
         <Dialog
-        open={outstandingStudents.isViewDialogOpen}
+        open={outstandingStudentsDialogs.isViewDialogOpen}
         TransitionComponent={TransitionDialog}
         keepMounted
         onClose={handleClose}

@@ -1,24 +1,26 @@
 import React from 'react'
 import {Dialog , DialogActions , DialogContent, DialogTitle, Button, Typography, CircularProgress } from "@material-ui/core";
-import {outstandingStudentsContext} from "../../../../store/store";
+import {outstandingStudentsContext, outstandingStudentsDialogsContext} from "../../../../store/store";
 import { TransitionDialog } from '../../../transitionDialog';
 import {observer} from "mobx-react-lite";
 
 const DeleteDialog = observer(() => {
     const outstandingStudents = React.useContext(outstandingStudentsContext);
+    const outstandingStudentsDialogs = React.useContext(outstandingStudentsDialogsContext);
 
     const handleClose = () => {
-        outstandingStudents.closeDeleteDialog()
+        outstandingStudentsDialogs.closeDeleteDialog()
     };
 
     const deleteOutstandingStudents = async() => {
         await outstandingStudents.deleteAdminOutstandingStudent();
+        outstandingStudentsDialogs.isOpen = true;
         handleClose();
     }
 
     return (
         <Dialog
-        open={outstandingStudents.isDeleteDialogOpen}
+        open={outstandingStudentsDialogs.isDeleteDialogOpen}
         TransitionComponent={TransitionDialog}
         keepMounted
         onClose={handleClose}

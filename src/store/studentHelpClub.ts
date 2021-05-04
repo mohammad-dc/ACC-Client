@@ -1,124 +1,81 @@
-import {makeAutoObservable} from "mobx";
-import {IStudent} from "../interfaces/student";
-import {IResponse} from "../interfaces/response";
+import { makeAutoObservable } from "mobx";
+import { IStudent } from "../interfaces/student";
+import { IResponse } from "../interfaces/response";
 import API from "../api/utils/requests";
 
 export class StudentHelpClubStore {
-    isAddDialogOpen: boolean = false;
-    isEditDialogOpen: boolean = false;
-    isDeleteDialogOpen: boolean = false;
-    isViewDialogOpen: boolean = false;
+  studentHelpClubSelected: number = 0;
+  studentHelpClub: IStudent[] = [];
+  isLoading: boolean = false;
+  response: IResponse = { success: false, message: "" };
 
-    studentHelpClubSelected: number = 0;
-    studentHelpClub: IStudent[] = [];
-    studentHelpClubClient: IStudent[] = [];
-    isLoading: boolean = false;
-    response: IResponse = {success: false, message: ''};
+  constructor() {
+    makeAutoObservable(this);
+  }
 
-    constructor(){
-        makeAutoObservable(this);
-    }
+  // admin
+  getAdminStudentHelpClub = (loading: boolean) => {
+    this.isLoading = loading;
+    API.GET("admin/students-help-club/get")
+      .then((res) => {
+        this.isLoading = false;
+        this.studentHelpClub = res.data.results;
+      })
+      .catch((error) => {
+        this.isLoading = false;
+        this.response = error.response.data;
+      });
+  };
 
-    openAddDialog = () =>{
-        this.isAddDialogOpen = true;
-    }
+  createAdminStudentHelpClub = (values: {}) => {
+    API.POST("admin/students-help-club/create", values)
+      .then((res) => {
+        this.response = res.data;
+        this.getAdminStudentHelpClub(false);
+      })
+      .catch((error) => {
+        this.response = error.response.data;
+      });
+  };
 
-    closeAddDialog = () =>{
-        this.isAddDialogOpen = false;
-    }
+  deleteAdminStudentHelpClub = () => {
+    API.DELETE(
+      `admin/students-help-club/delete/${this.studentHelpClubSelected}`
+    )
+      .then((res) => {
+        this.response = res.data;
+        this.getAdminStudentHelpClub(false);
+      })
+      .catch((error) => {
+        this.response = error.response.data;
+      });
+  };
 
-    openEditDialog = (ID: number) =>{
-        this.isEditDialogOpen = true;
-        this.studentHelpClubSelected = ID;
-    }
+  updateAdminStudentHelpClub = (values: {}) => {
+    API.PUT(
+      `admin/students-help-club/update/${this.studentHelpClubSelected}`,
+      values
+    )
+      .then((res) => {
+        this.response = res.data;
+        this.getAdminStudentHelpClub(false);
+      })
+      .catch((error) => {
+        this.response = error.response.data;
+      });
+  };
 
-    closeEditDialog = () =>{
-        this.isEditDialogOpen = false;
-    }
-
-    openDeleteDialog = (ID: number) =>{
-        this.isDeleteDialogOpen = true;
-        this.studentHelpClubSelected = ID;
-    }
-
-    closeDeleteDialog = () =>{
-        this.isDeleteDialogOpen = false;
-    }
-
-    openViewDialog = (ID: number) =>{
-        this.isViewDialogOpen = true;
-        this.studentHelpClubSelected = ID;
-    }
-
-    closeViewDialog = () =>{
-        this.isViewDialogOpen = false;
-    }
-
-    // admin
-    getAdminStudentHelpClub = () =>{
-        this.isLoading = true;
-        API.GET('admin/students-help-club/get')
-            .then(res => {
-                this.isLoading = false;
-                this.studentHelpClub = res.data.results
-            })
-            .catch(error =>{
-                this.isLoading = false;
-                this.response = error.response.data;
-            });
-    }
-
-    createAdminStudentHelpClub = (values: {}) =>{
-        this.isLoading = true;
-        API.POST('admin/students-help-club/create', values)
-            .then(res => {
-                this.isLoading = false;
-                this.response = res.data;
-            })
-            .catch(error =>{
-                this.isLoading = false;
-                this.response = error.response.data;
-            });
-    }
-
-    deleteAdminStudentHelpClub = () => {
-        this.isLoading = true;
-        API.DELETE(`admin/students-help-club/delete/${this.studentHelpClubSelected}`)
-            .then(res => {
-                this.isLoading = false;
-                this.response = res.data;
-            })
-            .catch(error =>{
-                this.isLoading = false;
-                this.response = error.response.data;
-            });
-    }
-
-    updateAdminStudentHelpClub = (values: {}) => {
-        this.isLoading = true;
-        API.PUT(`admin/students-help-club/update/${this.studentHelpClubSelected}`, values)
-            .then(res => {
-                this.isLoading = false;
-                this.response = res.data;
-            })
-            .catch(error =>{
-                this.isLoading = false;
-                this.response = error.response.data;
-            });
-    }
-
-    //user
-    getStudentHelpClub = () =>{
-        this.isLoading = true;
-        API.getNoToken('students-help-club/get')
-            .then(res => {
-                this.isLoading = false;
-                this.studentHelpClubClient = res.data.results
-            })
-            .catch(error =>{
-                this.isLoading = false;
-                this.response = error.response.data;
-            });
-    }
-
+  //user
+  getStudentHelpClub = () => {
+    this.isLoading = true;
+    API.getNoToken("students-help-club/get")
+      .then((res) => {
+        this.isLoading = false;
+        this.studentHelpClub = res.data.results;
+      })
+      .catch((error) => {
+        this.isLoading = false;
+        this.response = error.response.data;
+      });
+  };
 }

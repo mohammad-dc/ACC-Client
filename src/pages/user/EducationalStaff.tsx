@@ -19,17 +19,17 @@ const EducationalStaff = observer(() => {
                 <Box className={classes.membersBox}>    
                 <Typography variant="h3">الطاقم التعليمي</Typography>            
                     {
-                        educationalStaff.educationalStaffClient.length === 0
+                        educationalStaff.educationalStaff.length === 0
                         ? <NoData />
                         :  
                         <Box className={classes.membersBox}>
                             {
-                                educationalStaff.educationalStaffClient.length === 0
+                                educationalStaff.educationalStaff.length === 0
                                 ? <NoData />
                                 :
                                 <Grid container spacing={2}>
                                     {
-                                        educationalStaff.educationalStaffClient.map((item: IEducationalStaff, index: number) => (
+                                        educationalStaff.educationalStaff.map((item: IEducationalStaff, index: number) => (
                                             <Grid item xs={12} md={6} lg={3} xl={3} key={index}>
                                                 <EducationalStaffCard first_name={item.first_name} last_name={item.last_name} facebook={item.facebook} image={item.image} id={item.id}/>
                                             </Grid>

@@ -1,113 +1,81 @@
-import {makeAutoObservable} from "mobx";
-import {IEducationalStaff} from "../interfaces/educationalStaff";
-import {IResponse} from "../interfaces/response";
+import { makeAutoObservable } from "mobx";
+import { IEducationalStaff } from "../interfaces/educationalStaff";
+import { IResponse } from "../interfaces/response";
 import API from "../api/utils/requests";
 
 export class EducationalStaffStore {
-    isAddDialogOpen: boolean = false;
-    isEditDialogOpen: boolean = false;
-    isDeleteDialogOpen: boolean = false;
+  educationalStaffSelected: number = 0;
+  educationalStaff: IEducationalStaff[] = [];
+  isLoading: boolean = false;
+  response: IResponse = { success: false, message: "" };
 
-    educationalStaffSelected: number = 0;
-    educationalStaff: IEducationalStaff[] = [];
-    educationalStaffClient: IEducationalStaff[] = [];
-    isLoading: boolean = false;
-    response: IResponse = {success: false, message: ''};
+  constructor() {
+    makeAutoObservable(this);
+  }
 
-    constructor(){
-        makeAutoObservable(this);
-    }
+  // admin
+  getAdminEducationalStaff = (loading: boolean) => {
+    this.isLoading = loading;
+    API.GET("admin/educational-staff/get")
+      .then((res) => {
+        this.isLoading = false;
+        this.educationalStaff = res.data.results;
+      })
+      .catch((error) => {
+        this.isLoading = false;
+        this.response = error.response.data;
+      });
+  };
 
-    openAddDialog = () =>{
-        this.isAddDialogOpen = true;
-    }
+  createEducationalStaff = (values: {}) => {
+    API.POST("admin/educational-staff/create", values)
+      .then((res) => {
+        this.response = res.data;
+        this.getAdminEducationalStaff(false);
+      })
+      .catch((error) => {
+        this.response = error.response.data;
+      });
+  };
 
-    closeAddDialog = () =>{
-        this.isAddDialogOpen = false;
-    }
+  deleteEducationalStaff = () => {
+    API.DELETE(
+      `admin/educational-staff/delete/${this.educationalStaffSelected}`
+    )
+      .then((res) => {
+        this.response = res.data;
+        this.getAdminEducationalStaff(false);
+      })
+      .catch((error) => {
+        this.response = error.response.data;
+      });
+  };
 
-    openEditDialog = (ID: number) =>{
-        this.isEditDialogOpen = true;
-        this.educationalStaffSelected = ID;
-    }
+  updateEducationalStaff = (values: {}) => {
+    API.PUT(
+      `admin/educational-staff/update/${this.educationalStaffSelected}`,
+      values
+    )
+      .then((res) => {
+        this.response = res.data;
+        this.getAdminEducationalStaff(false);
+      })
+      .catch((error) => {
+        this.response = error.response.data;
+      });
+  };
 
-    closeEditDialog = () =>{
-        this.isEditDialogOpen = false;
-    }
-
-    openDeleteDialog = (ID: number) =>{
-        this.isDeleteDialogOpen = true;
-        this.educationalStaffSelected = ID;
-    }
-
-    closeDeleteDialog = () =>{
-        this.isDeleteDialogOpen = false;
-    }
-
-     // admin
-    getAdminEducationalStaff = () =>{
-        this.isLoading = true;
-        API.GET('admin/educational-staff/get')
-            .then(res => {
-                this.isLoading = false;
-                this.educationalStaff = res.data.results
-            })
-            .catch(error =>{
-                this.isLoading = false;
-                this.response = error.response.data;
-            });
-    }
-
-    createEducationalStaff = (values: {}) =>{
-        this.isLoading = true;
-        API.POST('admin/educational-staff/create', values)
-            .then(res => {
-                this.isLoading = false;
-                this.response = res.data;
-            })
-            .catch(error =>{
-                this.isLoading = false;
-                this.response = error.response.data;
-            });
-    }
-
-    deleteEducationalStaff = () => {
-        this.isLoading = true;
-        API.DELETE(`admin/educational-staff/delete/${this.educationalStaffSelected}`)
-            .then(res => {
-                this.isLoading = false;
-                this.response = res.data;
-            })
-            .catch(error =>{
-                this.isLoading = false;
-                this.response = error.response.data;
-            });
-    }
-
-    updateEducationalStaff = (values: {}) => {
-        this.isLoading = true;
-        API.PUT(`admin/educational-staff/update/${this.educationalStaffSelected}`, values)
-            .then(res => {
-                this.isLoading = false;
-                this.response = res.data;
-            })
-            .catch(error =>{
-                this.isLoading = false;
-                this.response = error.response.data;
-            });
-    }
-
-    //user
-    getEducationalStaff = () =>{
-        this.isLoading = true;
-        API.getNoToken('educational-staff/get')
-            .then(res => {
-                this.isLoading = false;
-                this.educationalStaffClient = res.data.results
-            })
-            .catch(error =>{
-                this.isLoading = false;
-                this.response = error.response.data;
-            });
-    }
+  //user
+  getEducationalStaff = () => {
+    this.isLoading = true;
+    API.getNoToken("educational-staff/get")
+      .then((res) => {
+        this.isLoading = false;
+        this.educationalStaff = res.data.results;
+      })
+      .catch((error) => {
+        this.isLoading = false;
+        this.response = error.response.data;
+      });
+  };
 }

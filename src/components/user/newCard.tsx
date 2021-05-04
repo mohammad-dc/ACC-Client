@@ -8,7 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import {INew} from "../../interfaces/news";
-import {newsContext} from "../../store/store";
+import {newsContext, newsDialogsContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 
 const useStyles = makeStyles({
@@ -22,6 +22,7 @@ const useStyles = makeStyles({
 const NewsCard: React.FC<INew> = observer(({id, title, description, image, date_time}: INew) =>{
     const classes = useStyles();
     const news = React.useContext(newsContext);
+    const newsDialogs = React.useContext(newsDialogsContext);
 
     return (
         <Card className={classes.root}>
@@ -45,7 +46,10 @@ const NewsCard: React.FC<INew> = observer(({id, title, description, image, date_
             </CardContent>
         </CardActionArea>
         <CardActions>
-            <Button size="small" color="primary" onClick={() => news.openViewDialog(id)}>
+            <Button size="small" color="primary" onClick={() => {
+                news.newsSelected = id;
+                newsDialogs.openViewDialog();
+                }}>
            اقرأ المزيد
             </Button>
         </CardActions>

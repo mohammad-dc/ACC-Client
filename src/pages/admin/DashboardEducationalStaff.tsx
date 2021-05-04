@@ -9,44 +9,52 @@ import AddDialog from "../../components/Dialogs/admin/EducationalStaff/AddDialog
 import EditDialog from "../../components/Dialogs/admin/EducationalStaff/EditDialog";
 import DeleteDialog from "../../components/Dialogs/admin/EducationalStaff/DeleteDialog";
 import EducationalStaffItemCard from "../../components/admin/educationalStaffItemCard";
-import {educationalStaffContext} from "../../store/store";
+import {educationalStaffContext, educationalStaffDialogsContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 import {useStyles} from "../../assets/styles/admin/pagesStanderdStyle";
 
 const DashboardEducationalStaff = observer(() => {
     const classes = useStyles();
     const educationalStaff = React.useContext(educationalStaffContext);
-    const [open, setOpen] = React.useState(false);
-    const [success, setSuccess] = React.useState(false);
+    const educationalStaffDialogs = React.useContext(educationalStaffDialogsContext);
 
     const handleCloseAlert = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
   
-        setOpen(false);
-        setSuccess(false);
+        educationalStaffDialogs.isOpen = false;
     };
 
     React.useEffect(() => {
-        educationalStaff.getAdminEducationalStaff();
-        setSuccess(educationalStaff.response.success);
-        setOpen(true);
-    }, [educationalStaff.response]);
+        educationalStaff.getAdminEducationalStaff(true);
+    }, []);
 
+    if(educationalStaff.isLoading){
+        return (
+            <AdminLayout>
+                <div className={classes.root}>
+                <Box className={classes.BoxFlex}>
+                    <Typography variant="h3">الطاقم التعليمي</Typography>
+                        <Fab aria-label="add" className={classes.floatBtn} onClick={() => educationalStaffDialogs.openAddDialog()}>
+                            <RiUserAddLine className={classes.floatBtnIcon}/>
+                        </Fab>
+                </Box>
+                <CircularProgress />
+                </div>
+        </AdminLayout>
+        )
+    }
+    else {
     return (
         <AdminLayout>
             <div className={classes.root}>
                 <Box className={classes.BoxFlex}>
                     <Typography variant="h3">الطاقم التعليمي</Typography>
-                        <Fab aria-label="add" className={classes.floatBtn} onClick={() => educationalStaff.openAddDialog()}>
+                        <Fab aria-label="add" className={classes.floatBtn} onClick={() => educationalStaffDialogs.openAddDialog()}>
                             <RiUserAddLine className={classes.floatBtnIcon}/>
                         </Fab>
                 </Box>
-                {
-                    educationalStaff.isLoading
-                    ? <CircularProgress />
-                    : 
                     <Box className={classes.membersBox}>
                         {
                             educationalStaff.educationalStaff.length === 0
@@ -63,30 +71,23 @@ const DashboardEducationalStaff = observer(() => {
                             </Grid>
                         }
                     </Box>
-                }
-
                 {
-                    educationalStaff.isAddDialogOpen? <AddDialog />: ""
+                    educationalStaffDialogs.isAddDialogOpen? <AddDialog />: ""
                 }
                  {
-                    educationalStaff.isEditDialogOpen? <EditDialog />: ""
+                    educationalStaffDialogs.isEditDialogOpen? <EditDialog />: ""
                 }
                  {
-                    educationalStaff.isDeleteDialogOpen? <DeleteDialog />: ""
+                    educationalStaffDialogs.isDeleteDialogOpen? <DeleteDialog />: ""
                 }
-
-                 {
-                    success
-                    ?
-                    <Snackbar open={open} autoHideDuration={3000} onClose={handleCloseAlert}>
-                        <Alert onClose={handleCloseAlert} severity={educationalStaff.response.success? 'success' : 'error'}>
-                            {educationalStaff.response.message}
-                        </Alert>
-                    </Snackbar> : ''
-                }
+                <Snackbar open={educationalStaffDialogs.isOpen} autoHideDuration={3000} onClose={handleCloseAlert}>
+                    <Alert onClose={handleCloseAlert} severity={educationalStaff.response.success? 'success' : 'error'}>
+                        {educationalStaff.response.message}
+                    </Alert>
+                </Snackbar>
             </div>
         </AdminLayout>
-    )
+    )}
 })
 
 export default DashboardEducationalStaff

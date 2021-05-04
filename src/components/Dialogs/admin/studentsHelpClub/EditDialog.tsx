@@ -5,11 +5,12 @@ import {Formik, Form} from "formik";
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import CustomField from "../../../CustomeField";
 import {StudentsHelpClubSchema} from "../../../../validations/studentsHelpClub";
-import {studentsHelpclubContext} from "../../../../store/store";
+import {studentsHelpclubContext, studentsHelpclubDialogsContext} from "../../../../store/store";
 import {observer} from "mobx-react-lite";
 
 const EditDialog = observer(() => {
     const studentsHelpClub = React.useContext(studentsHelpclubContext);
+    const studentsHelpClubDialogs = React.useContext(studentsHelpclubDialogsContext);
     const [image, setImage] = React.useState('');
     const studentsHelpClubItem = studentsHelpClub.studentHelpClub.find(item => item.id === studentsHelpClub.studentHelpClubSelected);
 
@@ -21,12 +22,12 @@ const EditDialog = observer(() => {
     }
 
     const handleClose = () => {
-        studentsHelpClub.closeEditDialog()
+        studentsHelpClubDialogs.closeEditDialog()
     };
 
     return (
         <Dialog
-        open={studentsHelpClub.isEditDialogOpen}
+        open={studentsHelpClubDialogs.isEditDialogOpen}
         TransitionComponent={TransitionDialog}
         keepMounted
         onClose={handleClose}
@@ -45,6 +46,7 @@ const EditDialog = observer(() => {
                 data.append('last_name', values.last_name);
                 data.append('description', values.description);
                 await studentsHelpClub.updateAdminStudentHelpClub(data);
+                studentsHelpClubDialogs.isOpen = true;
                 handleClose();
                 }}
             >

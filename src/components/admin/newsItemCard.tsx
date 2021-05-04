@@ -8,7 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import {INew} from "../../interfaces/news";
-import {newsContext} from "../../store/store";
+import {newsContext, newsDialogsContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 
 const useStyles = makeStyles({
@@ -20,6 +20,7 @@ const useStyles = makeStyles({
 const NewsItemCard: React.FC<INew> = observer(({id, title, description, image, date_time}: INew) =>{
     const classes = useStyles();
     const news = React.useContext(newsContext);
+    const newsDialogs = React.useContext(newsDialogsContext);
 
     return (
         <Card className={classes.root}>
@@ -44,10 +45,16 @@ const NewsItemCard: React.FC<INew> = observer(({id, title, description, image, d
             </CardContent>
         </CardActionArea>
         <CardActions>
-            <Button size="small" color="primary" onClick={() => news.openDeleteDialog(id)}>
+            <Button size="small" color="primary" onClick={() => {
+                news.newsSelected = id;
+                newsDialogs.openDeleteDialog()
+                }}>
             حذف
             </Button>
-            <Button size="small" color="primary" onClick={() => news.openEditDialog(id)}>
+            <Button size="small" color="primary" onClick={() => {
+                news.newsSelected = id;
+                newsDialogs.openEditDialog();
+                }}>
             تعديل
             </Button>
         </CardActions>

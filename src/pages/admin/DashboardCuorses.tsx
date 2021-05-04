@@ -13,7 +13,7 @@ import CourseCard from "../../components/CourseCard/CourseCard";
 import CoursesAddDialog from "../../components/Dialogs/admin/Courses/AddCourse";
 import CoursesEditDialog from "../../components/Dialogs/admin/Courses/EditCourse";
 import DeleteCourse from "../../components/Dialogs/admin/Courses/DeleteCourse";
-import {coursesContext} from "../../store/store";
+import {coursesContext, coursesDialogsContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 import {useStyles} from "../../assets/styles/admin/pagesStanderdStyle";
 
@@ -21,18 +21,16 @@ const DashboardCuorses = observer(() => {
     const classes = useStyles();
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
-    const [open, setOpen] = React.useState(false);
-    const [success, setSuccess] = React.useState(false);
 
     const courses = React.useContext(coursesContext);
-    console.log(courses.courses)
+    const coursesDialogs = React.useContext(coursesDialogsContext);
+
     let reqiuredCourses = [];
     let optinalCourses = [];
 
     reqiuredCourses = courses.courses.filter (el => el.type === 'اجباري');
     optinalCourses = courses.courses.filter (el => el.type === 'اختياري');
 
-    console.log(reqiuredCourses);
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);
     };
@@ -46,24 +44,37 @@ const DashboardCuorses = observer(() => {
             return;
         }
   
-        setOpen(false);
-        setSuccess(false);
+        coursesDialogs.isOpen = false;
     };
 
     React.useEffect(() => {
-        courses.getAdminCourses();
-        setSuccess(courses.response.success);
-        setOpen(true);
-    }, [courses.response]);
+        courses.getAdminCourses(true);
+    }, []);
 
+    if(courses.isLoading){
+        return (
+            <AdminLayout>
+            <div className={classes.root}>
+                <Box className={classes.BoxFlex}>
+                    <Typography variant="h3">المواد</Typography>
+                    <Fab aria-label="add" className={classes.floatBtn} onClick={() => coursesDialogs.openAddDialog()}>
+                        <RiAddFill className={classes.floatBtnIcon}/>
+                    </Fab>
+                </Box>
+                <CircularProgress />
+                </div>
+        </AdminLayout>
+        )
+    }
+    else {
     return (
         <AdminLayout>
             <div className={classes.root}>
                 <Box className={classes.BoxFlex}>
                     <Typography variant="h3">المواد</Typography>
-                        <Fab aria-label="add" className={classes.floatBtn} onClick={() => courses.openAddDialog()}>
-                            <RiAddFill className={classes.floatBtnIcon}/>
-                        </Fab>
+                    <Fab aria-label="add" className={classes.floatBtn} onClick={() => coursesDialogs.openAddDialog()}>
+                        <RiAddFill className={classes.floatBtnIcon}/>
+                    </Fab>
                 </Box>
 
                 <Box className={classes.membersBox}>
@@ -83,10 +94,6 @@ const DashboardCuorses = observer(() => {
                         onChangeIndex={handleChangeIndex}
                     >
                         <TabPanel value={value} index={0} dir='rtl'>
-                            {
-                                courses.isLoading
-                                ? <CircularProgress />
-                                :
                                 <Box>
                                     {
                                         reqiuredCourses.length === 0
@@ -103,57 +110,46 @@ const DashboardCuorses = observer(() => {
                                         </Grid>
                                     }
                                 </Box>
-                            }
-                            
                         </TabPanel>
                         <TabPanel value={value} index={1} dir='rtl'>
-                            {
-                                courses.isLoading
-                                ? <CircularProgress />
-                                :
-                                <Box>
-                                    {
-                                        optinalCourses.length === 0
-                                        ? <NoData />
-                                        :
-                                        <Grid container spacing={2} >
-                                            {
-                                                optinalCourses.map((item: ICourse) =>(
-                                                    <Grid item xs={12} md={6} lg={4} key={item.id}>
-                                                        <CourseCard courseData={item}/>
-                                                    </Grid>
-                                                ))
-                                            }
-                                        </Grid>
-                                    }
-                                </Box>
-                            }
+                            <Box>
+                                {
+                                    optinalCourses.length === 0
+                                    ? <NoData />
+                                    :
+                                    <Grid container spacing={2} >
+                                        {
+                                            optinalCourses.map((item: ICourse) =>(
+                                                <Grid item xs={12} md={6} lg={4} key={item.id}>
+                                                    <CourseCard courseData={item}/>
+                                                </Grid>
+                                            ))
+                                        }
+                                    </Grid>
+                                }
+                            </Box>
                         </TabPanel>
                     </SwipeableViews>
                 </Box>
 
                 {
-                    courses.isAddDialogOpen? <CoursesAddDialog />: ""
+                    coursesDialogs.isAddDialogOpen? <CoursesAddDialog />: ""
                 }
                  {
-                    courses.isEditDialogOpen? <CoursesEditDialog />: ""
+                    coursesDialogs.isEditDialogOpen? <CoursesEditDialog />: ""
                 }
                  {
-                    courses.isDeleteDialogOpen? <DeleteCourse />: ""
+                    coursesDialogs.isDeleteDialogOpen? <DeleteCourse />: ""
                 }
-
-                {
-                    success
-                    ?
-                    <Snackbar open={open} autoHideDuration={3000} onClose={handleCloseAlert}>
-                        <Alert onClose={handleCloseAlert} severity={courses.response.success? 'success' : 'error'}>
-                            {courses.response.message}
-                        </Alert>
-                    </Snackbar> : ''
-                }
+                <Snackbar open={coursesDialogs.isOpen} autoHideDuration={3000} onClose={handleCloseAlert}>
+                    <Alert onClose={handleCloseAlert} severity={courses.response.success? 'success' : 'error'}>
+                        {courses.response.message}
+                    </Alert>
+                </Snackbar>
            </div>
         </AdminLayout>
     )
+            }
 })
 
 export default DashboardCuorses

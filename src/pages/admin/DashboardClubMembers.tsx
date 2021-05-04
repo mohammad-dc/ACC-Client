@@ -8,45 +8,54 @@ import ClubMemberItem from "../../components/admin/ClubMemberItem";
 import ClubMemberAddDialog from "../../components/Dialogs/admin/ClubMember/ClubMemberAddDialog";
 import ClubMemberEditDialog from "../../components/Dialogs/admin/ClubMember/ClubMemberEditDialog";
 import ClubMemberDeleteDialog from "../../components/Dialogs/admin/ClubMember/ClubMemberDeleteDialog";
+import {IResponse} from "../../interfaces/response";
 import {IClubMember} from "../../interfaces/clubMember";
-import {clubMembersContext} from "../../store/store";
+import {clubMembersContext, clubMembersDialogsContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 import {useStyles} from "../../assets/styles/admin/pagesStanderdStyle";
 
 const DashboardClubMembers = observer(() => {
     const classes = useStyles();
     const clubMembers = React.useContext(clubMembersContext);
-    const [open, setOpen] = React.useState(false);
-    const [success, setSuccess] = React.useState(false);
+    const clubMembersDialogs = React.useContext(clubMembersDialogsContext);
 
     const handleCloseAlert = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
   
-        setOpen(false);
-        setSuccess(false);
+        clubMembersDialogs.isOpen = false;
     };
 
     React.useEffect(() => {
-        clubMembers.getAdminClubMembers();
-        setSuccess(clubMembers.response.success);
-        setOpen(true);
-    }, [clubMembers.response]);
+        clubMembers.getAdminClubMembers(true);
+    }, []);
 
+    if(clubMembers.isLoading){
+        return (
+            <AdminLayout>
+            <div className={classes.root}>
+                <Box className={classes.BoxFlex}>
+                    <Typography variant="h3">اعضاء النادي</Typography>
+                        <Fab aria-label="add" className={classes.floatBtn} onClick={() => clubMembersDialogs.openAddDialog()}>
+                            <RiUserAddLine className={classes.floatBtnIcon}/>
+                        </Fab>
+                </Box>
+                <CircularProgress />
+                </div>
+        </AdminLayout>
+        )
+    }
+    else {
     return (
         <AdminLayout>
             <div className={classes.root}>
                 <Box className={classes.BoxFlex}>
                     <Typography variant="h3">اعضاء النادي</Typography>
-                        <Fab aria-label="add" className={classes.floatBtn} onClick={() => clubMembers.openAddDialog()}>
+                        <Fab aria-label="add" className={classes.floatBtn} onClick={() => clubMembersDialogs.openAddDialog()}>
                             <RiUserAddLine className={classes.floatBtnIcon}/>
                         </Fab>
                 </Box>
-                {
-                    clubMembers.isLoading
-                    ? <CircularProgress />
-                    : 
                     <Box className={classes.membersBox}>
                         {
                             clubMembers.clubMember.length === 0
@@ -63,22 +72,20 @@ const DashboardClubMembers = observer(() => {
                             </Grid>
                         }
                     </Box>
-                }
-
                 {
-                    clubMembers.isAddDialogOpen? <ClubMemberAddDialog />: ""
+                    clubMembersDialogs.isAddDialogOpen? <ClubMemberAddDialog />: ""
                 }
                  {
-                    clubMembers.isEditDialogOpen? <ClubMemberEditDialog />: ""
+                    clubMembersDialogs.isEditDialogOpen? <ClubMemberEditDialog />: ""
                 }
                  {
-                    clubMembers.isDeleteDialogOpen? <ClubMemberDeleteDialog />: ""
+                    clubMembersDialogs.isDeleteDialogOpen? <ClubMemberDeleteDialog />: ""
                 }
 
                  {
-                    success
+                    clubMembersDialogs.isOpen
                     ?
-                    <Snackbar open={open} autoHideDuration={3000} onClose={handleCloseAlert}>
+                    <Snackbar open={clubMembersDialogs.isOpen} autoHideDuration={3000} onClose={handleCloseAlert}>
                         <Alert onClose={handleCloseAlert} severity={clubMembers.response.success? 'success' : 'error'}>
                             {clubMembers.response.message}
                         </Alert>
@@ -87,6 +94,7 @@ const DashboardClubMembers = observer(() => {
            </div>
         </AdminLayout>
     )
+            }
 })
 
 export default DashboardClubMembers

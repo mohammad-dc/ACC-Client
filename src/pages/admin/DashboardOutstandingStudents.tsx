@@ -9,45 +9,53 @@ import EditDialog from "../../components/Dialogs/admin/outstandingStudents/EditD
 import DeleteDialog from "../../components/Dialogs/admin/outstandingStudents/DeleteDialog";
 import {IStudent} from "../../interfaces/student"
 import OutstandingStudentsItemCard from "../../components/admin/outstandingStudentsItemCard";
-import {outstandingStudentsContext} from "../../store/store";
+import {outstandingStudentsContext, outstandingStudentsDialogsContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 import {useStyles} from "../../assets/styles/admin/pagesStanderdStyle";
 
 const DashboardOutstandingStudents = observer(() => {
     const classes = useStyles();
     const outstandingStudents = React.useContext(outstandingStudentsContext);
-    const [open, setOpen] = React.useState(false);
-    const [success, setSuccess] = React.useState(false);
+    const outstandingStudentsDialogs = React.useContext(outstandingStudentsDialogsContext);
 
     const handleCloseAlert = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === 'clickaway') {
             return;
         }
   
-        setOpen(false);
-        setSuccess(false);
+        outstandingStudentsDialogs.isOpen = true;
     };
 
     React.useEffect(() => {
-        outstandingStudents.getAdminOutstandingStudent();
-        setSuccess(outstandingStudents.response.success);
-        setOpen(true);
-    }, [outstandingStudents.response]);
+        outstandingStudents.getAdminOutstandingStudent(true);
+    }, []);
 
+    if(outstandingStudents.isLoading){
+        return (
+            <AdminLayout>
+                <div className={classes.root}>
+                    <Box className={classes.BoxFlex}>
+                        <Typography variant="h3">طلاب التخصص المتفوقين</Typography>
+                            <Fab aria-label="add" className={classes.floatBtn}>
+                                <RiUserAddLine className={classes.floatBtnIcon}/>
+                            </Fab>
+                    </Box>
+                    <Box className={classes.membersBox}>
+                        <CircularProgress />
+                    </Box>
+                </div>
+            </AdminLayout>
+        )
+    }
     return (
         <AdminLayout>
             <div className={classes.root}>
                 <Box className={classes.BoxFlex}>
                     <Typography variant="h3">طلاب التخصص المتفوقين</Typography>
-                        <Fab aria-label="add" className={classes.floatBtn} onClick={() => outstandingStudents.openAddDialog()}>
+                        <Fab aria-label="add" className={classes.floatBtn} onClick={() => outstandingStudentsDialogs.openAddDialog()}>
                             <RiUserAddLine className={classes.floatBtnIcon}/>
                         </Fab>
                 </Box>
-
-                {
-                    outstandingStudents.isLoading
-                    ? <CircularProgress />
-                    : 
                     <Box className={classes.membersBox}>
                         {
                             outstandingStudents.outstandingStudents.length === 0
@@ -64,26 +72,22 @@ const DashboardOutstandingStudents = observer(() => {
                             </Grid>
                         }
                     </Box>
-                }
 
                 {
-                    outstandingStudents.isAddDialogOpen? <AddDialog />: ""
+                    outstandingStudentsDialogs.isAddDialogOpen? <AddDialog />: ""
                 }
                  {
-                    outstandingStudents.isEditDialogOpen? <EditDialog />: ""
+                    outstandingStudentsDialogs.isEditDialogOpen? <EditDialog />: ""
                 }
                  {
-                    outstandingStudents.isDeleteDialogOpen? <DeleteDialog />: ""
+                    outstandingStudentsDialogs.isDeleteDialogOpen? <DeleteDialog />: ""
                 }
-                {
-                    success
-                    ?
-                    <Snackbar open={open} autoHideDuration={3000} onClose={handleCloseAlert}>
-                        <Alert onClose={handleCloseAlert} severity={outstandingStudents.response.success? 'success' : 'error'}>
-                            {outstandingStudents.response.message}
-                        </Alert>
-                    </Snackbar> : ''
-                }
+
+                <Snackbar open={outstandingStudentsDialogs.isOpen} autoHideDuration={3000} onClose={handleCloseAlert}>
+                    <Alert onClose={handleCloseAlert} severity={outstandingStudents.response.success? 'success' : 'error'}>
+                        {outstandingStudents.response.message}
+                    </Alert>
+                </Snackbar>
 
             </div>
         </AdminLayout>

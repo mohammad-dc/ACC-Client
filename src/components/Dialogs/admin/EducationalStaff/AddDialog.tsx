@@ -5,7 +5,7 @@ import {Formik, Form} from "formik";
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import CustomField from "../../../CustomeField";
 import {EducationalStaffSchema} from "../../../../validations/educationalStaff";
-import {educationalStaffContext} from "../../../../store/store";
+import {educationalStaffContext, educationalStaffDialogsContext} from "../../../../store/store";
 import {observer} from "mobx-react-lite";
 
 
@@ -18,15 +18,16 @@ let initialValues = {
 
 const AddDialog = observer(() => {
     const educationalStaff = React.useContext(educationalStaffContext);
+    const educationalStaffDialogs = React.useContext(educationalStaffDialogsContext);
     const [image, setImage] = React.useState('');
 
     const handleClose = () => {
-        educationalStaff.closeAddDialog()
+        educationalStaffDialogs.closeAddDialog()
     };
 
     return (
         <Dialog
-        open={educationalStaff.isAddDialogOpen}
+        open={educationalStaffDialogs.isAddDialogOpen}
         TransitionComponent={TransitionDialog}
         keepMounted
         onClose={handleClose}
@@ -45,6 +46,7 @@ const AddDialog = observer(() => {
                 data.append('last_name', values.last_name);
                 data.append('facebook', values.facebook);
                 await educationalStaff.createEducationalStaff(data);
+                educationalStaffDialogs.isOpen = true;
                 handleClose();
                 }}
             >

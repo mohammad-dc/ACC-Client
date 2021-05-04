@@ -1,23 +1,31 @@
 import React from 'react'
 import UserLayout from "../../layouts/user/userLayout";
 import Footer from "../../components/Footer/Footer";
-import {Box, Grid, Tabs, Tab   } from "@material-ui/core";
+import {Box, Grid, Tabs, Tab, CircularProgress} from "@material-ui/core";
+import {ICourse} from "../../interfaces/course";
 import {useTheme} from "@material-ui/core/styles";
 import TabPanel from "../../components/TabPanel";
 import AllyProps from "../../components/AllyProps";
 import SwipeableViews from 'react-swipeable-views';
 import NoData from "../../components/NoData/NoData";
 import UserCourseCard from "../../components/CourseCard/UserCourseCard";
-import {coursesContext} from "../../store/store";
+import {coursesContext, coursesDialogsContext} from "../../store/store";
 import {observer} from "mobx-react-lite";
 import {useStyles} from "../../assets/styles/admin/pagesStanderdStyle";
 
-const Courses = () => {
+const Courses = observer(() => {
     const classes = useStyles();
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
 
     const courses = React.useContext(coursesContext);
+    const coursesDialogs = React.useContext(coursesDialogsContext);
+
+    let reqiuredCourses = [];
+    let optinalCourses = [];
+
+    reqiuredCourses = courses.courses.filter (el => el.type === 'اجباري');
+    optinalCourses = courses.courses.filter (el => el.type === 'اختياري');
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);
@@ -46,30 +54,58 @@ const Courses = () => {
                         onChangeIndex={handleChangeIndex}
                     >
                         <TabPanel value={value} index={0} dir='rtl'>
-                            <Grid container spacing={2} >
-                                <Grid item xs={12} md={6} lg={4} >
-                                        <UserCourseCard />
-                                </Grid>
-                                <Grid item xs={12} md={6} lg={4} >
-                                        <UserCourseCard />
-                                </Grid>
-                                <Grid item xs={12} md={6} lg={4} >
-                                        <UserCourseCard />
-                                </Grid>
-                                <Grid item xs={12} md={6} lg={4} >
-                                        <UserCourseCard />
-                                </Grid>
-                                
-                            </Grid>
+                        <Box>
+                            {
+                                courses.isLoading
+                                ? <CircularProgress />
+                                :
+                                <Box>
+                                    {
+                                        reqiuredCourses.length === 0
+                                        ? <NoData />
+                                        :
+                                        <Grid container spacing={2} >
+                                            {
+                                                reqiuredCourses.map((item: ICourse) =>(
+                                                    <Grid item xs={12} md={6} lg={4} key={item.id}>
+                                                        <UserCourseCard courseData={item}/>
+                                                    </Grid>
+                                                ))
+                                            }
+                                        </Grid>
+                                    }
+                                </Box>
+                            }
+                        </Box>
                         </TabPanel>
                         <TabPanel value={value} index={1} dir='rtl'>
-                            <NoData />
+                        {
+                            courses.isLoading
+                            ? <CircularProgress />
+                            :
+                            <Box>
+                                {
+                                    optinalCourses.length === 0
+                                    ? <NoData />
+                                    :
+                                    <Grid container spacing={2} >
+                                        {
+                                            optinalCourses.map((item: ICourse) =>(
+                                                <Grid item xs={12} md={6} lg={4} key={item.id}>
+                                                    <UserCourseCard courseData={item}/>
+                                                </Grid>
+                                            ))
+                                        }
+                                    </Grid>
+                                }
+                            </Box>
+                            }
                         </TabPanel>
                     </SwipeableViews>
                 </Box>
                 <Footer />
         </UserLayout>
     )
-}
+});
 
 export default Courses
